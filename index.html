@@ -98,7 +98,7 @@
 
 
             <h3>Maintenance Details</h3>
-            <label for="ownershipPeriod">Ownership Period (Months)</label>
+            <label for="ownershipPeriod">Ownership Period (Months) (Tentative)</label>
             <input type="number" id="ownershipPeriod" value="120">
 
             <label for="distance">Distance Ran per Year (km)</label>
@@ -174,16 +174,16 @@ function generateReport() {
             <tr><td>EMI (Monthly)</td><td>₹${emi.toFixed(2)}</td></tr>
             <tr><td>Total Loan Amount</td><td>₹${totalLoanAmount.toFixed(2)}</td></tr>
             <tr><td>EMI Paid to-date</td><td>₹${emiPaidToDate.toFixed(2)}</td></tr>
+            <tr><th>Maintenance Details for ${monthsPaid} Months To-Date</th><th>Amount</th></tr>
+            <tr><td>Fuel Cost (Paid)</td><td>₹${totalFuelCostPaid.toFixed(2)}</td></tr>
+            <tr><td>Service Maintenance (Paid)</td><td>₹${totalServiceMaintenancePaid.toFixed(2)}</td></tr>
+            <tr><td>Other Maintenance & Repair</td><td>₹${otherMaintenance.toFixed(2)}</td></tr>
+            <tr><th>Total Expense To-Date</th><th>₹${totalExpensePaid.toFixed(2)}</th></tr>
             <tr><th>Maintenance Details for ${ownershipPeriodInYears} Years</th><th>Amount</th></tr>
             <tr><td>Fuel Cost (Total)</td><td>₹${totalFuelCost.toFixed(2)}</td></tr>
             <tr><td>Service Maintenance (Total)</td><td>₹${totalServiceMaintenance.toFixed(2)}</td></tr>
             <tr><td>Other Maintenance & Repair</td><td>₹${otherMaintenance.toFixed(2)}</td></tr>
             <tr><th>Total Expense for Ownership Period</th><th>₹${totalExpense.toFixed(2)}</th></tr>
-            <tr><th>Maintenance Details for ${monthsPaid} Months Paid</th><th>Amount</th></tr>
-            <tr><td>Fuel Cost (Paid)</td><td>₹${totalFuelCostPaid.toFixed(2)}</td></tr>
-            <tr><td>Service Maintenance (Paid)</td><td>₹${totalServiceMaintenancePaid.toFixed(2)}</td></tr>
-            <tr><td>Other Maintenance & Repair</td><td>₹${otherMaintenance.toFixed(2)}</td></tr>
-            <tr><th>Total Expense for Months Paid</th><th>₹${totalExpensePaid.toFixed(2)}</th></tr>
         </table>
     `;
     

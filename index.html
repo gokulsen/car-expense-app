@@ -158,7 +158,7 @@
         // Generate Report
         const report = document.getElementById("report");
         report.innerHTML = `
-            <h2>Expense Summary for ${term / 12} years</h2>
+            <h2>Expense Summary for ${term / 12} years (Loan Tenure)</h2>
             <p><strong>Car Model:</strong> ${model}</p>
             <h3>Loan Details</h3>
             <p><strong>Down Payment:</strong> ₹${downPayment.toLocaleString()}</p>
@@ -167,7 +167,7 @@
             <p><strong>Total Fuel Cost:</strong> ₹${totalFuelCost.toLocaleString()}</p>
             <p><strong>Total Service Maintenance:</strong> ₹${totalServiceMaintenance.toLocaleString()}</p>
             <p><strong>Other Maintenance & Repair:</strong> ₹${repairCost.toLocaleString()}</p>
-            <h3>Total Expense</h3>
+            <h3>Total Expense (Loan + Maintenance)</h3>
             <p class="highlight">₹${totalExpense.toLocaleString()}</p>
         `;
     }

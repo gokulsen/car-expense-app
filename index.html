@@ -3,230 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Summary Report</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Car Loan and Maintenance Calculator</title>
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
-            background-color: #f0f4f8;
         }
         .container {
             display: flex;
-            flex-direction: row;
-            height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
+            width: 100%;
         }
-        .column {
-            flex: 1;
+        .left-column, .right-column {
+            width: 50%;
             padding: 20px;
-            box-sizing: border-box;
         }
-        .left {
-            background-color: #ffffff;
-            border-right: 2px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        .left-column {
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .right {
-            background-color: #ffffff;
-            overflow-y: auto;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+        .right-column {
+            background-color: #f9f9f9;
+            margin-left: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         h2 {
-            color: #34495e;
-            font-weight: 600;
-            margin-bottom: 10px;
+            text-align: center;
         }
-        label {
-            font-weight: 500;
-            color: #2c3e50;
+        label, input, button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
         }
         input {
             width: 100%;
-            padding: 12px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-        input:focus {
-            border-color: #3498db;
-            outline: none;
         }
         button {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background-color: #3498db;
+            background-color: #4CAF50;
             color: white;
             border: none;
             font-size: 16px;
-            margin-top: 20px;
-            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #2980b9;
         }
         .report {
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            padding: 20px;
             margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
+            padding: 15px;
+            background-color: #e7f5e7;
+            border: 1px solid #d1e7d1;
+            display: none;
         }
-        .report h2 {
-            text-align: center;
-            color: #34495e;
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        .report p {
-            margin: 10px 0;
-            color: #555;
-            line-height: 1.6;
+        .result-table td, .result-table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
-        .highlight {
-            font-weight: bold;
-            color: #e74c3c;
-            font-size: 18px;
-        }
-        .icon {
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-        .input-group {
-            margin-bottom: 20px;
-        }
-        .input-group label {
-            font-size: 14px;
-        }
-        .input-group input {
-            padding: 10px;
-            font-size: 16px;
+        .result-table th {
+            background-color: #4CAF50;
+            color: white;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- Left Column -->
-    <div class="column left">
-        <h2>Car Details</h2>
-        <label for="model">Model:</label>
-        <input type="text" id="model" value="Kia Seltos HTK+">
+    <div class="container">
+        <!-- Left Column (Input Form) -->
+        <div class="left-column">
+            <h2>Car and Loan Details</h2>
 
-        <h2>Loan Details</h2>
-        <label for="downPayment">Down Payment:</label>
-        <input type="text" id="downPayment" value="₹3,48,000.00">
+            <label for="carModel">Car Model:</label>
+            <input type="text" id="carModel" value="Kia Seltos HTK+" disabled>
 
-        <label for="principal">Principal, P:</label>
-        <input type="text" id="principal" value="₹1100000.00">
+            <h3>Loan Details</h3>
+            <label for="downPayment">Down Payment:</label>
+            <input type="number" id="downPayment" value="348000.00">
 
-        <label for="rate">Rate of Interest, R:</label>
-        <input type="text" id="rate" value="8.85%">
+            <label for="principal">Principal (Loan Amount):</label>
+            <input type="number" id="principal" value="1100000.00">
 
-        <label for="term">Term in months, N:</label>
-        <input type="text" id="term" value="84">
+            <label for="interestRate">Rate of Interest (%):</label>
+            <input type="number" id="interestRate" value="8.85">
 
-        <h2>Maintenance Details</h2>
-        <label for="ownershipPeriod">Ownership Period (Years):</label>
-        <input type="number" id="ownershipPeriod" value="10">
-        
-        <label for="distance">Distance Run per year (in km):</label>
-        <input type="text" id="distance" value="10000">
+            <label for="termMonths">Term (Months):</label>
+            <input type="number" id="termMonths" value="84">
 
-        <label for="mileage">Mileage (in km):</label>
-        <input type="text" id="mileage" value="14">
+            <h3>Maintenance Details</h3>
+            <label for="ownershipPeriod">Ownership Period (Years):</label>
+            <input type="number" id="ownershipPeriod" value="10">
 
-        <label for="fuelCost">Fuel Cost per litre:</label>
-        <input type="text" id="fuelCost" value="₹105.00">
+            <label for="distance">Distance Ran per Year (km):</label>
+            <input type="number" id="distance" value="10000">
 
-        <label for="serviceMaintenance">Service Maintenance (per year):</label>
-        <input type="text" id="serviceMaintenance" value="₹12,000.00">
+            <label for="mileage">Mileage (km/l):</label>
+            <input type="number" id="mileage" value="14">
 
-        <label for="repairCost">Other Maintenance & Repair:</label>
-        <input type="text" id="repairCost" value="₹67,000.00">
+            <label for="fuelCost">Fuel Cost per Liter (₹):</label>
+            <input type="number" id="fuelCost" value="105.00">
 
-        <button onclick="generateReport()">Generate Report</button>
-    </div>
+            <label for="serviceMaintenance">Service Maintenance (per Year):</label>
+            <input type="number" id="serviceMaintenance" value="12000.00">
 
-    <!-- Right Column -->
-    <div class="column right">
-        <div class="report" id="report">
+            <label for="otherMaintenance">Other Maintenance & Repair (₹):</label>
+            <input type="number" id="otherMaintenance" value="67000.00">
+
+            <button onclick="generateReport()">Generate Report</button>
+        </div>
+
+        <!-- Right Column (Report Display) -->
+        <div class="right-column">
             <h2>Expense Summary Report</h2>
-            <p>Click the "Generate Report" button to see the details.</p>
+            <div id="expenseReport" class="report"></div>
         </div>
     </div>
-</div>
 
-<script>
-    function parseValue(value) {
-        return parseFloat(value.replace(/[^0-9.-]+/g, ""));
-    }
+    <script>
+        function generateReport() {
+            // Get inputs from user
+            const downPayment = parseFloat(document.getElementById("downPayment").value);
+            const principal = parseFloat(document.getElementById("principal").value);
+            const interestRate = parseFloat(document.getElementById("interestRate").value);
+            const termMonths = parseInt(document.getElementById("termMonths").value);
+            const ownershipPeriod = parseInt(document.getElementById("ownershipPeriod").value);
+            const distance = parseInt(document.getElementById("distance").value);
+            const mileage = parseFloat(document.getElementById("mileage").value);
+            const fuelCost = parseFloat(document.getElementById("fuelCost").value);
+            const serviceMaintenance = parseFloat(document.getElementById("serviceMaintenance").value);
+            const otherMaintenance = parseFloat(document.getElementById("otherMaintenance").value);
 
-    function generateReport() {
-    // Get inputs
-    try {
-        const model = document.getElementById("model").value;
-        const downPayment = parseValue(document.getElementById("downPayment").value) || 0;
-        const principal = parseValue(document.getElementById("principal").value) || 0;
-        const rate = parseFloat(document.getElementById("rate").value.replace("%", "")) / 100 / 12 || 0;
-        const term = parseInt(document.getElementById("term").value) || 0;
-        const distance = parseInt(document.getElementById("distance").value) || 0;
-        const mileage = parseFloat(document.getElementById("mileage").value) || 1; // Prevent divide-by-zero
-        const fuelCost = parseValue(document.getElementById("fuelCost").value) || 0;
-        const serviceMaintenance = parseValue(document.getElementById("serviceMaintenance").value) || 0;
-        const repairCost = parseValue(document.getElementById("repairCost").value) || 0;
+            // EMI Calculation
+            const monthlyInterestRate = (interestRate / 100) / 12;
+            const emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / (Math.pow(1 + monthlyInterestRate, termMonths) - 1);
+            const totalLoanAmount = emi * termMonths;
 
-         // EMI Calculation
-        const monthlyInterestRate = (interestRate / 100) / 12;
-        const emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / (Math.pow(1 + monthlyInterestRate, termMonths) - 1);
-        const totalLoanAmount = emi * termMonths;
+            // Maintenance Cost Calculation
+            const fuelConsumedPerYear = distance / mileage;
+            const totalFuelCost = fuelConsumedPerYear * fuelCost * ownershipPeriod;
+            const totalServiceMaintenance = serviceMaintenance * ownershipPeriod;
 
-        // Maintenance Cost Calculation
-        const fuelConsumedPerYear = distance / mileage;
-        const totalFuelCost = fuelConsumedPerYear * fuelCost * ownershipPeriod;
-        const totalServiceMaintenance = serviceMaintenance * ownershipPeriod;
+            // Total Expenses Calculation
+            const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
+            const totalExpense = downPayment + totalLoanAmount + totalMaintenanceCost;
 
-        // Total Expenses Calculation
-        const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
-        const totalExpense = downPayment + totalLoanAmount + totalMaintenanceCost;
-
-        // Generate and display the report
-                const reportHTML = `
-                    <h3>Expense Summary for ${ownershipPeriod} Years</h3>
-                    <table class="result-table">
-                        <tr><th>Loan Details</th><th>Amount</th></tr>
-                        <tr><td>Down Payment</td><td>₹${downPayment.toFixed(2)}</td></tr>
-                        <tr><td>Loan Amount (Principal)</td><td>₹${principal.toFixed(2)}</td></tr>
-                        <tr><td>Interest Rate</td><td>${interestRate}%</td></tr>
-                        <tr><td>EMI (Monthly)</td><td>₹${emi.toFixed(2)}</td></tr>
-                        <tr><td>Total Loan Amount</td><td>₹${totalLoanAmount.toFixed(2)}</td></tr>
-                        <tr><th>Maintenance Details</th><th>Amount</th></tr>
-                        <tr><td>Fuel Cost (Total)</td><td>₹${totalFuelCost.toFixed(2)}</td></tr>
-                        <tr><td>Service Maintenance (Total)</td><td>₹${totalServiceMaintenance.toFixed(2)}</td></tr>
-                        <tr><td>Other Maintenance & Repair</td><td>₹${otherMaintenance.toFixed(2)}</td></tr>
-                        <tr><th>Total Expense</th><th>₹${totalExpense.toFixed(2)}</th></tr>
-                    </table>
-                `;
+            // Generate and display the report
+            const reportHTML = `
+                <h3>Expense Summary for ${ownershipPeriod} Years</h3>
+                <table class="result-table">
+                    <tr><th>Loan Details</th><th>Amount</th></tr>
+                    <tr><td>Down Payment</td><td>₹${downPayment.toFixed(2)}</td></tr>
+                    <tr><td>Loan Amount (Principal)</td><td>₹${principal.toFixed(2)}</td></tr>
+                    <tr><td>Interest Rate</td><td>${interestRate}%</td></tr>
+                    <tr><td>EMI (Monthly)</td><td>₹${emi.toFixed(2)}</td></tr>
+                    <tr><td>Total Loan Amount</td><td>₹${totalLoanAmount.toFixed(2)}</td></tr>
+                    <tr><th>Maintenance Details</th><th>Amount</th></tr>
+                    <tr><td>Fuel Cost (Total)</td><td>₹${totalFuelCost.toFixed(2)}</td></tr>
+                    <tr><td>Service Maintenance (Total)</td><td>₹${totalServiceMaintenance.toFixed(2)}</td></tr>
+                    <tr><td>Other Maintenance & Repair</td><td>₹${otherMaintenance.toFixed(2)}</td></tr>
+                    <tr><th>Total Expense</th><th>₹${totalExpense.toFixed(2)}</th></tr>
+                </table>
+            `;
             
             document.getElementById("expenseReport").innerHTML = reportHTML;
             document.getElementById("expenseReport").style.display = "block";
-    } catch (error) {
-        alert("An error occurred during the calculation. Please check your inputs.");
-        console.error(error);
-    }
-}
-
-</script>
+        }
+    </script>
 
 </body>
 </html>

@@ -137,6 +137,9 @@
         <input type="text" id="term" value="84">
 
         <h2>Maintenance Details</h2>
+        <label for="ownershipPeriod">Ownership Period (Years):</label>
+        <input type="number" id="ownershipPeriod" value="10">
+        
         <label for="distance">Distance Run per year (in km):</label>
         <input type="text" id="distance" value="10000">
 
@@ -183,30 +186,40 @@
         const serviceMaintenance = parseValue(document.getElementById("serviceMaintenance").value) || 0;
         const repairCost = parseValue(document.getElementById("repairCost").value) || 0;
 
-        // Calculate values
-        const emi = (principal * rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1);
-        const totalLoanAmount = emi * term;
-        const fuelConsumedPerYear = distance / mileage;
-        const totalFuelCost = fuelConsumedPerYear * fuelCost * (term / 12);
-        const totalServiceMaintenance = serviceMaintenance * (term / 12);
-        const totalExpense = downPayment + totalLoanAmount + totalFuelCost + totalServiceMaintenance + repairCost;
+         // EMI Calculation
+        const monthlyInterestRate = (interestRate / 100) / 12;
+        const emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / (Math.pow(1 + monthlyInterestRate, termMonths) - 1);
+        const totalLoanAmount = emi * termMonths;
 
-        // Generate Report
-        const report = document.getElementById("report");
-        report.innerHTML = `
-            <h2>Expense Summary for ${term / 12} years (Loan Tenure)</h2>
-            <p><strong>Car Model:</strong> ${model}</p>
-            <h3>Loan Details</h3>
-            <p><strong>Down Payment:</strong> ₹${downPayment.toLocaleString()}</p>
-            <p><strong>EMI:</strong> ₹${emi.toFixed(2).toLocaleString()}</p>
-            <p><strong>Total Loan Amount:</strong> ₹${totalLoanAmount.toLocaleString()}</p>
-            <h3>Maintenance Details</h3>
-            <p><strong>Total Fuel Cost:</strong> ₹${totalFuelCost.toFixed(2).toLocaleString()}</p>
-            <p><strong>Total Service Maintenance:</strong> ₹${totalServiceMaintenance.toLocaleString()}</p>
-            <p><strong>Other Maintenance & Repair:</strong> ₹${repairCost.toLocaleString()}</p>
-            <h3>Total Expense (Loan + Maintenance)</h3>
-            <p class="highlight">₹${totalExpense.toLocaleString()}</p>
-        `;
+        // Maintenance Cost Calculation
+        const fuelConsumedPerYear = distance / mileage;
+        const totalFuelCost = fuelConsumedPerYear * fuelCost * ownershipPeriod;
+        const totalServiceMaintenance = serviceMaintenance * ownershipPeriod;
+
+        // Total Expenses Calculation
+        const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
+        const totalExpense = downPayment + totalLoanAmount + totalMaintenanceCost;
+
+        // Generate and display the report
+                const reportHTML = `
+                    <h3>Expense Summary for ${ownershipPeriod} Years</h3>
+                    <table class="result-table">
+                        <tr><th>Loan Details</th><th>Amount</th></tr>
+                        <tr><td>Down Payment</td><td>₹${downPayment.toFixed(2)}</td></tr>
+                        <tr><td>Loan Amount (Principal)</td><td>₹${principal.toFixed(2)}</td></tr>
+                        <tr><td>Interest Rate</td><td>${interestRate}%</td></tr>
+                        <tr><td>EMI (Monthly)</td><td>₹${emi.toFixed(2)}</td></tr>
+                        <tr><td>Total Loan Amount</td><td>₹${totalLoanAmount.toFixed(2)}</td></tr>
+                        <tr><th>Maintenance Details</th><th>Amount</th></tr>
+                        <tr><td>Fuel Cost (Total)</td><td>₹${totalFuelCost.toFixed(2)}</td></tr>
+                        <tr><td>Service Maintenance (Total)</td><td>₹${totalServiceMaintenance.toFixed(2)}</td></tr>
+                        <tr><td>Other Maintenance & Repair</td><td>₹${otherMaintenance.toFixed(2)}</td></tr>
+                        <tr><th>Total Expense</th><th>₹${totalExpense.toFixed(2)}</th></tr>
+                    </table>
+                `;
+            
+            document.getElementById("expenseReport").innerHTML = reportHTML;
+            document.getElementById("expenseReport").style.display = "block";
     } catch (error) {
         alert("An error occurred during the calculation. Please check your inputs.");
         console.error(error);

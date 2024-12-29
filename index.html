@@ -137,7 +137,7 @@
 
             // Generate Report
             const report = `
-                <h2>Expense Summary for ${loanDurationYears} years</h2>
+                <h2>Expense Summary for ${loanDurationYears} years (Loan Tenure)</h2>
                 <p><strong>Car Model:</strong> ${carModel}</p>
                 <h3>Loan Details</h3>
                 <p><strong>Down Payment:</strong> ₹${downPayment.toFixed(2)}</p>
@@ -148,7 +148,7 @@
                 <p><strong>Total Maintenance Cost:</strong> ₹${totalMaintenance.toFixed(2)}</p>
                 <p><strong>Tyre Replacement Cost:</strong> ₹${tyreReplacement.toFixed(2)}</p>
                 <h3>Total Expense Summary</h3>
-                <p><strong>Total Expense:</strong> ₹${totalExpense.toFixed(2)}</p>
+                <p><strong>Total Expense (Down Payment + Loan Amount + Maintainance + Tyre Replacement):</strong> ₹${totalExpense.toFixed(2)}</p>
             `;
 
             // Update the report section

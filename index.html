@@ -11,6 +11,10 @@
             background-color: #f4f4f9;
             margin: 0;
             padding: 0;
+            justify-content: center; /* Centers the content horizontally */
+            align-items: center; /* Centers the content vertically */
+            height: 100vh; /* Ensures the page takes full height of the viewport */
+            flex-direction: column;
         }
         .container {
             display: flex;
@@ -72,9 +76,9 @@
 <body>
 
     <div class="container">
+        <h1>Car Loan and Maintenance Calculator</h1> <!-- Title Displayed on Page -->
         <!-- Left Column (Input Form) -->
         <div class="left-column">
-            <h1>Car Loan and Maintenance Calculator</h1> <!-- Title Displayed on Page -->
             <h2>Car and Loan Details</h2>
 
             <label for="carModel">Car Model</label>

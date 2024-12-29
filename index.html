@@ -77,7 +77,7 @@
             <h2>Car and Loan Details</h2>
 
             <label for="carModel">Car Model:</label>
-            <input type="text" id="carModel" value="Kia Seltos HTK+">
+            <input type="text" id="carModel" value="Kia Seltos HTK+" disabled>
 
             <h3>Loan Details</h3>
             <label for="downPayment">Down Payment:</label>
@@ -92,9 +92,14 @@
             <label for="termMonths">Term (Months):</label>
             <input type="number" id="termMonths" value="84">
 
+            <!-- New Fields -->
+            <label for="monthsPaid">Months Paid:</label>
+            <input type="number" id="monthsPaid" value="57">
+
+
             <h3>Maintenance Details</h3>
-            <label for="ownershipPeriod">Ownership Period (Years):</label>
-            <input type="number" id="ownershipPeriod" value="10">
+            <label for="ownershipPeriod">Ownership Period (Months):</label>
+            <input type="number" id="ownershipPeriod" value="120">
 
             <label for="distance">Distance Ran per Year (km):</label>
             <input type="number" id="distance" value="10000">
@@ -134,11 +139,15 @@
             const fuelCost = parseFloat(document.getElementById("fuelCost").value);
             const serviceMaintenance = parseFloat(document.getElementById("serviceMaintenance").value);
             const otherMaintenance = parseFloat(document.getElementById("otherMaintenance").value);
+            const monthsPaid = parseInt(document.getElementById("monthsPaid").value);
 
             // EMI Calculation
             const monthlyInterestRate = (interestRate / 100) / 12;
             const emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / (Math.pow(1 + monthlyInterestRate, termMonths) - 1);
             const totalLoanAmount = emi * termMonths;
+
+            // EMI Paid to date
+            const emiPaidToDate = emi * monthsPaid;
 
             // Maintenance Cost Calculation
             const fuelConsumedPerYear = distance / mileage;
@@ -149,21 +158,31 @@
             const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
             const totalExpense = downPayment + totalLoanAmount + totalMaintenanceCost;
 
+            // Calculate expenses for months paid
+            const totalFuelCostPaid = fuelConsumedPerYear * fuelCost * (monthsPaid / 12);
+            const totalServiceMaintenancePaid = serviceMaintenance * (monthsPaid / 12);
+            const totalMaintenanceCostPaid = totalFuelCostPaid + totalServiceMaintenancePaid + otherMaintenance;
+            const totalExpensePaid = downPayment + emiPaidToDate + totalMaintenanceCostPaid;
+
             // Generate and display the report
             const reportHTML = `
-                <h3>Expense Summary for ${ownershipPeriod} Years</h3>
+                <h3>Expense Summary</h3>
                 <table class="result-table">
                     <tr><th>Loan Details</th><th>Amount</th></tr>
                     <tr><td>Down Payment</td><td>₹${downPayment.toFixed(2)}</td></tr>
-                    <tr><td>Loan Amount (Principal)</td><td>₹${principal.toFixed(2)}</td></tr>
-                    <tr><td>Interest Rate</td><td>${interestRate}%</td></tr>
                     <tr><td>EMI (Monthly)</td><td>₹${emi.toFixed(2)}</td></tr>
                     <tr><td>Total Loan Amount</td><td>₹${totalLoanAmount.toFixed(2)}</td></tr>
-                    <tr><th>Maintenance Details</th><th>Amount</th></tr>
+                    <tr><td>EMI Paid to-date</td><td>₹${emiPaidToDate.toFixed(2)}</td></tr>
+                    <tr><th>Maintenance Details for ${ownershipPeriod} Months</th><th>Amount</th></tr>
                     <tr><td>Fuel Cost (Total)</td><td>₹${totalFuelCost.toFixed(2)}</td></tr>
                     <tr><td>Service Maintenance (Total)</td><td>₹${totalServiceMaintenance.toFixed(2)}</td></tr>
                     <tr><td>Other Maintenance & Repair</td><td>₹${otherMaintenance.toFixed(2)}</td></tr>
-                    <tr><th>Total Expense</th><th>₹${totalExpense.toFixed(2)}</th></tr>
+                    <tr><th>Total Expense for Ownership Period</th><th>₹${totalExpense.toFixed(2)}</th></tr>
+                    <tr><th>Maintenance Details for ${monthsPaid} Months To-Date</th><th>Amount</th></tr>
+                    <tr><td>Fuel Cost (Paid)</td><td>₹${totalFuelCostPaid.toFixed(2)}</td></tr>
+                    <tr><td>Service Maintenance (Paid)</td><td>₹${totalServiceMaintenancePaid.toFixed(2)}</td></tr>
+                    <tr><td>Other Maintenance & Repair</td><td>₹${otherMaintenance.toFixed(2)}</td></tr>
+                    <tr><th>Total Expense To-Date</th><th>₹${totalExpensePaid.toFixed(2)}</th></tr>
                 </table>
             `;
             

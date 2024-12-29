@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Summary Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f7f9fc;
+            background-color: #f0f4f8;
         }
         .container {
             display: flex;
             flex-direction: row;
             height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .column {
             flex: 1;
@@ -24,35 +27,51 @@
         .left {
             background-color: #ffffff;
             border-right: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         .right {
-            background-color: #f0f4f8;
+            background-color: #ffffff;
             overflow-y: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
         h2 {
+            color: #34495e;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        label {
+            font-weight: 500;
             color: #2c3e50;
         }
-        label, input {
-            display: block;
-            width: 100%;
-            margin: 10px 0;
-        }
         input {
-            padding: 8px;
+            width: 100%;
+            padding: 12px;
             font-size: 14px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            border-color: #3498db;
+            outline: none;
         }
         button {
             display: block;
             width: 100%;
-            padding: 10px;
+            padding: 14px;
             background-color: #3498db;
             color: white;
             border: none;
             font-size: 16px;
             margin-top: 20px;
-            border-radius: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #2980b9;
@@ -62,20 +81,36 @@
             border: 1px solid #ddd;
             padding: 20px;
             margin-top: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
         }
         .report h2 {
             text-align: center;
             color: #34495e;
         }
         .report p {
-            margin: 5px 0;
+            margin: 10px 0;
             color: #555;
+            line-height: 1.6;
         }
         .highlight {
             font-weight: bold;
             color: #e74c3c;
+            font-size: 18px;
+        }
+        .icon {
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            font-size: 14px;
+        }
+        .input-group input {
+            padding: 10px;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -135,17 +170,18 @@
     }
 
     function generateReport() {
-        // Get inputs
+    // Get inputs
+    try {
         const model = document.getElementById("model").value;
-        const downPayment = parseValue(document.getElementById("downPayment").value);
-        const principal = parseValue(document.getElementById("principal").value);
-        const rate = parseFloat(document.getElementById("rate").value.replace("%", "")) / 100 / 12;
-        const term = parseInt(document.getElementById("term").value);
-        const distance = parseInt(document.getElementById("distance").value);
-        const mileage = parseFloat(document.getElementById("mileage").value);
-        const fuelCost = parseValue(document.getElementById("fuelCost").value);
-        const serviceMaintenance = parseValue(document.getElementById("serviceMaintenance").value);
-        const repairCost = parseValue(document.getElementById("repairCost").value);
+        const downPayment = parseValue(document.getElementById("downPayment").value) || 0;
+        const principal = parseValue(document.getElementById("principal").value) || 0;
+        const rate = parseFloat(document.getElementById("rate").value.replace("%", "")) / 100 / 12 || 0;
+        const term = parseInt(document.getElementById("term").value) || 0;
+        const distance = parseInt(document.getElementById("distance").value) || 0;
+        const mileage = parseFloat(document.getElementById("mileage").value) || 1; // Prevent divide-by-zero
+        const fuelCost = parseValue(document.getElementById("fuelCost").value) || 0;
+        const serviceMaintenance = parseValue(document.getElementById("serviceMaintenance").value) || 0;
+        const repairCost = parseValue(document.getElementById("repairCost").value) || 0;
 
         // Calculate values
         const emi = (principal * rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1);
@@ -162,16 +198,21 @@
             <p><strong>Car Model:</strong> ${model}</p>
             <h3>Loan Details</h3>
             <p><strong>Down Payment:</strong> ₹${downPayment.toLocaleString()}</p>
-            <p><strong>EMI:</strong> ₹${emi.toLocaleString()}</p>
+            <p><strong>EMI:</strong> ₹${emi.toFixed(2).toLocaleString()}</p>
             <p><strong>Total Loan Amount:</strong> ₹${totalLoanAmount.toLocaleString()}</p>
             <h3>Maintenance Details</h3>
-            <p><strong>Total Fuel Cost:</strong> ₹${totalFuelCost.toLocaleString()}</p>
+            <p><strong>Total Fuel Cost:</strong> ₹${totalFuelCost.toFixed(2).toLocaleString()}</p>
             <p><strong>Total Service Maintenance:</strong> ₹${totalServiceMaintenance.toLocaleString()}</p>
             <p><strong>Other Maintenance & Repair:</strong> ₹${repairCost.toLocaleString()}</p>
             <h3>Total Expense (Loan + Maintenance)</h3>
             <p class="highlight">₹${totalExpense.toLocaleString()}</p>
         `;
+    } catch (error) {
+        alert("An error occurred during the calculation. Please check your inputs.");
+        console.error(error);
     }
+}
+
 </script>
 
 </body>

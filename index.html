@@ -87,11 +87,11 @@
             <label>Fuel Cost per litre:</label>
             <input type="text" id="fuelCost" value="₹105.00">
 
-            <label>Maintenance per year:</label>
-            <input type="text" id="maintenancePerYear" value="₹12,000.00">
+            <label>Service Maintenance per year:</label>
+            <input type="text" id="serviceMaintenancePerYear" value="₹12,000.00">
 
-            <label>Tyre Replacement Cost:</label>
-            <input type="text" id="tyreReplacement" value="₹35,000.00">
+            <label>Parts Replacement Cost:</label>
+            <input type="text" id="partsReplacement" value="₹35,000.00">
 
             <button onclick="generateReport()">Generate Report</button>
         </div>
@@ -127,13 +127,13 @@
             const fuelConsumedPerYear = distanceRun / mileage;
             const totalFuelCost = fuelConsumedPerYear * loanDurationYears * fuelCost;
 
-            const maintenancePerYear = parseFloat(document.getElementById("maintenancePerYear").value.replace(/[^0-9.]/g, ""));
-            const totalMaintenance = maintenancePerYear * loanDurationYears;
+            const serviceMaintenancePerYear = parseFloat(document.getElementById("maintenancePerYear").value.replace(/[^0-9.]/g, ""));
+            const totalMaintenance = serviceMaintenancePerYear * loanDurationYears;
 
-            const tyreReplacement = parseFloat(document.getElementById("tyreReplacement").value.replace(/[^0-9.]/g, ""));
+            const partsReplacement = parseFloat(document.getElementById("partsReplacement").value.replace(/[^0-9.]/g, ""));
 
             // Total Expense Summary
-            const totalExpense = downPayment + totalLoanAmount + totalFuelCost + totalMaintenance + tyreReplacement;
+            const totalExpense = downPayment + totalLoanAmount + totalFuelCost + totalMaintenance + partsReplacement;
 
             // Generate Report
             const report = `
@@ -146,9 +146,9 @@
                 <h3>Maintenance Details</h3>
                 <p><strong>Total Fuel Cost:</strong> ₹${totalFuelCost.toFixed(2)}</p>
                 <p><strong>Total Maintenance Cost:</strong> ₹${totalMaintenance.toFixed(2)}</p>
-                <p><strong>Tyre Replacement Cost:</strong> ₹${tyreReplacement.toFixed(2)}</p>
+                <p><strong>Parts Replacement Cost:</strong> ₹${partsReplacement.toFixed(2)}</p>
                 <h3>Total Expense Summary</h3>
-                <p><strong>Total Expense (Down Payment + Loan Amount + Maintainance + Tyre Replacement):</strong> ₹${totalExpense.toFixed(2)}</p>
+                <p><strong>Total Expense (Down Payment + Loan Amount + Maintainance + Parts Replacement):</strong> ₹${totalExpense.toFixed(2)}</p>
             `;
 
             // Update the report section

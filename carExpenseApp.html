@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Loan and Maintenance Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+        .column {
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .column:nth-child(1) {
+            background-color: #f4f4f4;
+        }
+        .column:nth-child(2) {
+            background-color: #ffffff;
+            border-left: 2px solid #ccc;
+        }
+        label, input, button {
+            display: block;
+            margin: 10px 0;
+            width: 100%;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .report {
+            background-color: #e7f5e7;
+            border: 1px solid #d1e7d1;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        h3 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Left Column -->
+        <div class="column">
+            <h2>Car and Loan Details</h2>
+            
+            <label>Car Model:</label>
+            <input type="text" id="carModel" value="Kia Seltos HTK+">
+
+            <h3>Loan Details</h3>
+            <label>Down Payment:</label>
+            <input type="text" id="downPayment" value="₹3,48,000.00">
+
+            <label>Principal (P):</label>
+            <input type="text" id="principal" value="₹1100000.00">
+
+            <label>Rate of Interest (R):</label>
+            <input type="text" id="interestRate" value="8.85%">
+
+            <label>Term in months (N):</label>
+            <input type="text" id="termMonths" value="84">
+
+            <h3>Maintenance Details</h3>
+            <label>Distance Run per year (in km):</label>
+            <input type="text" id="distanceRun" value="10000">
+
+            <label>Mileage (km per litre):</label>
+            <input type="text" id="mileage" value="14">
+
+            <label>Fuel Cost per litre:</label>
+            <input type="text" id="fuelCost" value="₹105.00">
+
+            <label>Maintenance per year:</label>
+            <input type="text" id="maintenancePerYear" value="₹12,000.00">
+
+            <label>Tyre Replacement Cost:</label>
+            <input type="text" id="tyreReplacement" value="₹35,000.00">
+
+            <button onclick="generateReport()">Generate Report</button>
+        </div>
+
+        <!-- Right Column -->
+        <div class="column">
+            <div id="report" class="report">
+                <h2>Expense Summary</h2>
+                <p>Click the button to generate the report.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateReport() {
+            // Get values from the form
+            const carModel = document.getElementById("carModel").value;
+            const downPayment = parseFloat(document.getElementById("downPayment").value.replace(/[^0-9.]/g, ""));
+            const principal = parseFloat(document.getElementById("principal").value.replace(/[^0-9.]/g, ""));
+            const interestRate = parseFloat(document.getElementById("interestRate").value.replace(/[^0-9.]/g, ""));
+            const termMonths = parseInt(document.getElementById("termMonths").value);
+            const loanDurationYears = termMonths / 12;
+
+            // EMI Calculation
+            const monthlyRate = interestRate / 100 / 12;
+            const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, termMonths)) / (Math.pow(1 + monthlyRate, termMonths) - 1);
+            const totalLoanAmount = emi * termMonths;
+
+            // Maintenance Calculations
+            const distanceRun = parseFloat(document.getElementById("distanceRun").value);
+            const mileage = parseFloat(document.getElementById("mileage").value);
+            const fuelCost = parseFloat(document.getElementById("fuelCost").value.replace(/[^0-9.]/g, ""));
+            const fuelConsumedPerYear = distanceRun / mileage;
+            const totalFuelCost = fuelConsumedPerYear * loanDurationYears * fuelCost;
+
+            const maintenancePerYear = parseFloat(document.getElementById("maintenancePerYear").value.replace(/[^0-9.]/g, ""));
+            const totalMaintenance = maintenancePerYear * loanDurationYears;
+
+            const tyreReplacement = parseFloat(document.getElementById("tyreReplacement").value.replace(/[^0-9.]/g, ""));
+
+            // Total Expense Summary
+            const totalExpense = downPayment + totalLoanAmount + totalFuelCost + totalMaintenance + tyreReplacement;
+
+            // Generate Report
+            const report = `
+                <h2>Expense Summary for ${loanDurationYears} years</h2>
+                <p><strong>Car Model:</strong> ${carModel}</p>
+                <h3>Loan Details</h3>
+                <p><strong>Down Payment:</strong> ₹${downPayment.toFixed(2)}</p>
+                <p><strong>EMI (Monthly):</strong> ₹${emi.toFixed(2)}</p>
+                <p><strong>Total Loan Amount:</strong> ₹${totalLoanAmount.toFixed(2)}</p>
+                <h3>Maintenance Details</h3>
+                <p><strong>Total Fuel Cost:</strong> ₹${totalFuelCost.toFixed(2)}</p>
+                <p><strong>Total Maintenance Cost:</strong> ₹${totalMaintenance.toFixed(2)}</p>
+                <p><strong>Tyre Replacement Cost:</strong> ₹${tyreReplacement.toFixed(2)}</p>
+                <h3>Total Expense Summary</h3>
+                <p><strong>Total Expense:</strong> ₹${totalExpense.toFixed(2)}</p>
+            `;
+
+            // Update the report section
+            document.getElementById("report").innerHTML = report;
+        }
+    </script>
+
+</body>
+</html>

@@ -5,91 +5,176 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Loan and Maintenance Calculator</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            justify-content: center; /* Centers the content horizontally */
-            align-items: center; /* Centers the content vertically */
-            height: 100vh; /* Ensures the page takes full height of the viewport */
-            flex-direction: column;
-        }
-        .container {
-            display: flex;
-            width: 100%;
-        }
-        .left-column, .right-column {
-            width: 50%;
-            padding: 20px;
-        }
-        .left-column {
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .right-column {
-            background-color: #f9f9f9;
-            margin-left: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            text-align: center;
-        }
-        label, input, button {
-            width: 100%;
-            margin: 10px 0;
-            padding: 8px;
-        }
-        input {
-            width: 100%;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .report {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #e7f5e7;
-            border: 1px solid #d1e7d1;
-            display: none;
-        }
-        .result-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .result-table td, .result-table th {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        .result-table th {
-            background-color: #4CAF50;
-            color: white;
-        }
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			background-color: #f4f4f9;
+			margin: 0;
+			padding: 0;
+			justify-content: center;
+			align-items: flex-start;
+			min-height: 100vh;
+			flex-direction: column;
+		}
+
+		.container {
+			display: flex;
+			flex-wrap: wrap;
+			width: 100%;
+			max-width: 1200px;
+			justify-content: space-between;
+			margin: 20px;
+			padding: 10px;
+			box-sizing: border-box;
+		}
+
+		.column {
+			flex: 1 1 32%; /* Each column now takes up approximately 32% of the available width */
+			padding: 15px;
+			box-sizing: border-box;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			height: 100%; /* Ensure all columns fill available height */
+		}
+
+		.left-column, .right-column, .notes-column {
+			background-color: white;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			margin: 10px;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			overflow: auto;
+			height: 100%; /* Ensure these columns expand equally in height */
+		}
+
+		.left-column {
+			background-color: #f9f9f9;
+		}
+
+		h2, h3 {
+			text-align: center;
+			margin-bottom: 5px;
+		}
+
+		label {
+			font-size: 14px;
+			margin-bottom: 5px;
+		}
+
+		input, textarea {
+			width: 100%;
+			padding: 8px;
+			margin-bottom: 10px;
+			font-size: 14px;
+		}
+
+		button {
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			font-size: 16px;
+			cursor: pointer;
+			margin-top: 10px;
+			padding: 10px;
+			width: 100%;
+		}
+
+		.report {
+			margin-top: 20px;
+			padding: 15px;
+			background-color: #e7f5e7;
+			border: 1px solid #d1e7d1;
+			display: none;
+		}
+
+		.result-table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		.result-table td, .result-table th {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: left;
+		}
+
+		.result-table th {
+			background-color: #4CAF50;
+			color: white;
+		}
+
 		.report-section {
-    margin-bottom: 20px;
-	}
+			margin-bottom: 15px;
+		}
 
-	.report-section h3 {
-		font-size: 1.5em;
-		color: #333;
-		margin-bottom: 10px;
-	}
+		.report-section h3 {
+			font-size: 1.5em;
+			color: #333;
+			margin-bottom: 10px;
+		}
 
-	.report-section p {
-		font-size: 1em;
-		color: #555;
-		margin: 5px 0;
-	}
+		.report-section p {
+			font-size: 1em;
+			color: #555;
+			margin: 5px 0;
+		}
 
-	.report-section strong {
-		font-weight: bold;
-	}
+		.report-section strong {
+			font-weight: bold;
+		}
+
+		.notes-column {
+			flex: 1 1 32%; /* Ensuring equal width partition */
+			min-width: 250px;
+			max-width: 400px;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			height: 100%; /* Ensuring height matches the others */
+		}
+
+		textarea {
+			min-height: 100px;
+			margin-bottom: 10px;
+			padding: 10px;
+			box-sizing: border-box;
+		}
+
+		.notes-list {
+			width: 100%;
+			margin-top: 15px;
+			padding: 10px;
+			background-color: #f9f9f9;
+			box-sizing: border-box;
+		}
+
+		.notes-list .note {
+			margin-bottom: 10px;
+			padding: 10px;
+			background-color: #e7f5e7;
+			border: 1px solid #d1e7d1;
+		}
+
+		button {
+			align-self: flex-start;
+		}
+
+		@media (max-width: 768px) {
+			.container {
+				flex-direction: column;
+				align-items: center; /* Align all columns at the center on smaller screens */
+			}
+
+			.column {
+				flex: 1 1 100%; /* Each column takes up full width on small screens */
+				max-width: 100%;
+				padding: 10px;
+			}
+		}
+
+
 
     </style>
 </head>
@@ -119,7 +204,6 @@
             <label for="monthsPaid">Months Paid</label>
             <input type="number" id="monthsPaid" value="57">
 
-
             <h3>Maintenance Details</h3>
             <label for="distance">Distance Ran per Year (km)</label>
             <input type="number" id="distance" value="10000">
@@ -139,100 +223,144 @@
             <label for="ownershipPeriod">Ownership Period (Months) (Tentative)</label>
             <input type="number" id="ownershipPeriod" value="120">
 
-
             <button onclick="generateReport()">Generate Report</button>
         </div>
 
-        <!-- Right Column (Report Display) -->
-        <div class="right-column">
+        <!-- Middle Column (Report Display) -->
+        <div class="column right-column">
             <h2>Expense Summary Report</h2>
             <div id="expenseReport" class="report"></div>
+        </div>
+
+        <!-- Right Column (Notes Section) -->
+        <div class="column notes-column">
+            <h2>Notes</h2>
+            <textarea id="noteInput" placeholder="Type your note here..."></textarea>
+            <button onclick="addNote()">Save Note</button>
+            <div class="notes-list" id="notesList"></div>
         </div>
     </div>
 
     <script>
-function generateReport() {
-    // Get inputs from user
-	const carModel = document.getElementById("carModel").value;
-    const downPayment = parseFloat(document.getElementById("downPayment").value);
-    const principal = parseFloat(document.getElementById("principal").value);
-    const interestRate = parseFloat(document.getElementById("interestRate").value);
-    const termMonths = parseInt(document.getElementById("termMonths").value);
-    const ownershipPeriod = parseInt(document.getElementById("ownershipPeriod").value);
-    const distance = parseInt(document.getElementById("distance").value);
-    const mileage = parseFloat(document.getElementById("mileage").value);
-    const fuelCost = parseFloat(document.getElementById("fuelCost").value);
-    const serviceMaintenance = parseFloat(document.getElementById("serviceMaintenance").value);
-    const otherMaintenance = parseFloat(document.getElementById("otherMaintenance").value);
-    const monthsPaid = parseInt(document.getElementById("monthsPaid").value);
+        function generateReport() {
+            // Get inputs from user
+            const carModel = document.getElementById("carModel").value;
+            const downPayment = parseFloat(document.getElementById("downPayment").value);
+            const principal = parseFloat(document.getElementById("principal").value);
+            const interestRate = parseFloat(document.getElementById("interestRate").value);
+            const termMonths = parseInt(document.getElementById("termMonths").value);
+            const ownershipPeriod = parseInt(document.getElementById("ownershipPeriod").value);
+            const distance = parseInt(document.getElementById("distance").value);
+            const mileage = parseFloat(document.getElementById("mileage").value);
+            const fuelCost = parseFloat(document.getElementById("fuelCost").value);
+            const serviceMaintenance = parseFloat(document.getElementById("serviceMaintenance").value);
+            const otherMaintenance = parseFloat(document.getElementById("otherMaintenance").value);
+            const monthsPaid = parseInt(document.getElementById("monthsPaid").value);
 
-    // EMI Calculation
-    const monthlyInterestRate = (interestRate / 100) / 12;
-    const emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / (Math.pow(1 + monthlyInterestRate, termMonths) - 1);
-    const totalLoanAmount = emi * termMonths;
+            // EMI Calculation
+            const monthlyInterestRate = (interestRate / 100) / 12;
+            const emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / (Math.pow(1 + monthlyInterestRate, termMonths) - 1);
+            const totalLoanAmount = emi * termMonths;
 
-    // EMI Paid to date
-    const emiPaidToDate = emi * monthsPaid;
+            // EMI Paid to date
+            const emiPaidToDate = emi * monthsPaid;
 
-    // EMI to be paid
-    const emiToBePaid = totalLoanAmount - emiPaidToDate;
+            // EMI to be paid
+            const emiToBePaid = totalLoanAmount - emiPaidToDate;
 
-    // Maintenance Cost Calculation
-    const ownershipPeriodInYears = ownershipPeriod / 12; // Convert months to years
-    const fuelConsumedPerYear = distance / mileage;
-    const totalFuelCost = fuelConsumedPerYear * fuelCost * ownershipPeriodInYears;
-    const totalServiceMaintenance = serviceMaintenance * ownershipPeriodInYears;
+            // Maintenance Cost Calculation
+            const ownershipPeriodInYears = ownershipPeriod / 12; // Convert months to years
+            const fuelConsumedPerYear = distance / mileage;
+            const totalFuelCost = fuelConsumedPerYear * fuelCost * ownershipPeriodInYears;
+            const totalServiceMaintenance = serviceMaintenance * ownershipPeriodInYears;
 
-    // Total Expenses Calculation
-    const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
-    const totalExpense = downPayment + totalLoanAmount + totalMaintenanceCost;
+            // Total Expenses Calculation
+            const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
+            const totalExpense = downPayment + totalLoanAmount + totalMaintenanceCost;
 
-    // Calculate expenses for months paid
-    const totalFuelCostPaid = fuelConsumedPerYear * fuelCost * (monthsPaid / 12);
-    const totalServiceMaintenancePaid = serviceMaintenance * (monthsPaid / 12);
-    const totalMaintenanceCostPaid = totalFuelCostPaid + totalServiceMaintenancePaid + otherMaintenance;
-    const totalExpensePaid = downPayment + emiPaidToDate + totalMaintenanceCostPaid;
+            // Calculate expenses for months paid
+            const totalFuelCostPaid = fuelConsumedPerYear * fuelCost * (monthsPaid / 12);
+            const totalServiceMaintenancePaid = serviceMaintenance * (monthsPaid / 12);
+            const totalMaintenanceCostPaid = totalFuelCostPaid + totalServiceMaintenancePaid + otherMaintenance;
+            const totalExpensePaid = downPayment + emiPaidToDate + totalMaintenanceCostPaid;
 
-	 // Generate and display the report
-	const reportHTML = `
-		<div class="report-section">
-			<h3>Car Details</h3>
-			<p><strong>Car Model:</strong> ${carModel}</p>
-		</div>
+             // Generate and display the report
+            const reportHTML = `
+                <div class="report-section">
+                    <h3>Car Details</h3>
+                    <p><strong>Car Model:</strong> ${carModel}</p>
+                </div>
 
-		<div class="report-section">
-			<h3>Loan Details</h3>
-			<p><strong>Down Payment:</strong> ₹${downPayment.toFixed(2)}</p>
-   			<p><strong>Principal Loan Amount:</strong> ₹${principal.toFixed(2)}</p>
-			<p><strong>EMI (Monthly):</strong> ₹${emi.toFixed(2)}</p>
-			<p><strong>Loan Amount with Interest:</strong> ₹${totalLoanAmount.toFixed(2)}</p>
-			<p><strong>EMI Paid To-Date:</strong> ₹${emiPaidToDate.toFixed(2)}</p>
-   			<p><strong>EMI To-Be Paid:</strong> ₹${emiToBePaid.toFixed(2)}</p>
-		</div>
+                <div class="report-section">
+                    <h3>Loan Details</h3>
+                    <p><strong>Down Payment:</strong> ₹${downPayment.toFixed(2)}</p>
+                    <p><strong>Principal Loan Amount:</strong> ₹${principal.toFixed(2)}</p>
+                    <p><strong>EMI (Monthly):</strong> ₹${emi.toFixed(2)}</p>
+                    <p><strong>Loan Amount with Interest:</strong> ₹${totalLoanAmount.toFixed(2)}</p>
+                    <p><strong>EMI Paid To-Date:</strong> ₹${emiPaidToDate.toFixed(2)}</p>
+                    <p><strong>EMI To-Be Paid:</strong> ₹${emiToBePaid.toFixed(2)}</p>
+                </div>
 
-		<div class="report-section">
-			<h3>Maintenance Cost for ${monthsPaid} Months To-Date</h3>
-			<p><strong>Fuel Cost (Paid):</strong> ₹${totalFuelCostPaid.toFixed(2)}</p>
-			<p><strong>Service Maintenance (Paid):</strong> ₹${totalServiceMaintenancePaid.toFixed(2)}</p>
-			<p><strong>Other Maintenance & Repair:</strong> ₹${otherMaintenance.toFixed(2)}</p>
-			<p><strong>Total Expense To-Date:</strong> ₹${totalExpensePaid.toFixed(2)}</p>
-		</div>
+                <div class="report-section">
+                    <h3>Maintenance Cost for ${monthsPaid} Months To-Date</h3>
+                    <p><strong>Fuel Cost (Paid):</strong> ₹${totalFuelCostPaid.toFixed(2)}</p>
+                    <p><strong>Service Maintenance (Paid):</strong> ₹${totalServiceMaintenancePaid.toFixed(2)}</p>
+                    <p><strong>Other Maintenance & Repair:</strong> ₹${otherMaintenance.toFixed(2)}</p>
+                    <p><strong>Total Expense To-Date:</strong> ₹${totalExpensePaid.toFixed(2)}</p>
+                </div>
 
-		<div class="report-section">
-			<h3>Maintenance Cost for ${ownershipPeriodInYears} Years</h3>
-			<p><strong>Fuel Cost (Total):</strong> ₹${totalFuelCost.toFixed(2)}</p>
-			<p><strong>Service Maintenance (Total):</strong> ₹${totalServiceMaintenance.toFixed(2)}</p>
-			<p><strong>Other Maintenance & Repair:</strong> ₹${otherMaintenance.toFixed(2)}</p>
-			<p><strong>Total Expense for Ownership Period:</strong> ₹${totalExpense.toFixed(2)}</p>
-		</div>
-	`;
+                <div class="report-section">
+                    <h3>Maintenance Cost for ${ownershipPeriodInYears} Years</h3>
+                    <p><strong>Fuel Cost (Total):</strong> ₹${totalFuelCost.toFixed(2)}</p>
+                    <p><strong>Service Maintenance (Total):</strong> ₹${totalServiceMaintenance.toFixed(2)}</p>
+                    <p><strong>Other Maintenance & Repair:</strong> ₹${otherMaintenance.toFixed(2)}</p>
+                    <p><strong>Total Expense for Ownership Period:</strong> ₹${totalExpense.toFixed(2)}</p>
+                </div>
+            `;
 
-	// Display the generated report
-	document.getElementById("expenseReport").innerHTML = reportHTML;
-	document.getElementById("expenseReport").style.display = "block";
+            // Display the generated report
+            document.getElementById("expenseReport").innerHTML = reportHTML;
+            document.getElementById("expenseReport").style.display = "block";
+        }
 
-}
+        // Notes Section
+        function loadNotes() {
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            const notesList = document.getElementById('notesList');
+            notesList.innerHTML = '';
+            notes.forEach((note, index) => {
+                const noteElement = document.createElement('div');
+                noteElement.classList.add('note');
+                noteElement.innerHTML = `
+                    <p>${note}</p>
+                    <button onclick="deleteNote(${index})">Delete</button>
+                `;
+                notesList.appendChild(noteElement);
+            });
+        }
 
+        function addNote() {
+            const noteInput = document.getElementById('noteInput');
+            const note = noteInput.value.trim();
+            if (!note) {
+                alert('Please enter a note.');
+                return;
+            }
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            notes.push(note);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            noteInput.value = '';
+            loadNotes();
+        }
+
+        function deleteNote(index) {
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            notes.splice(index, 1);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            loadNotes();
+        }
+
+        loadNotes();
     </script>
 
 </body>

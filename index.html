@@ -125,8 +125,11 @@
             <label for="ownershipPeriod">Ownership Period (Months) (Tentative)</label>
             <input type="number" id="ownershipPeriod" value="120">
 
+	    <label for="resaleValue">Resale Value</label>
+            <input type="number" id="resaleValue" value="120">
+
             <button onclick="generateReport()">Generate Report</button>
-			<button onclick="loadLastSavedData()">Use Last Saved Data</button>
+		<button onclick="loadLastSavedData()">Use Last Saved Data</button>
         </div>
 
         <!-- Right Column (Report Display) -->
@@ -171,8 +174,9 @@
             const serviceMaintenance = parseFloat(document.getElementById("serviceMaintenance").value);
             const otherMaintenance = parseFloat(document.getElementById("otherMaintenance").value);
             const monthsPaid = parseInt(document.getElementById("monthsPaid").value);
+	    const resaleValue = parseInt(document.getElementById("resaleValue").value);
 			
-			// Save input values to localStorage
+	// Save input values to localStorage
             localStorage.setItem('carModel', carModel);
             localStorage.setItem('downPayment', downPayment);
             localStorage.setItem('principal', principal);
@@ -185,6 +189,7 @@
             localStorage.setItem('serviceMaintenance', serviceMaintenance);
             localStorage.setItem('otherMaintenance', otherMaintenance);
             localStorage.setItem('monthsPaid', monthsPaid);
+	    localStorage.setItem('resaleValue', resaleValue);
 
             // EMI Calculation
             const monthlyInterestRate = (interestRate / 100) / 12;
@@ -241,6 +246,11 @@
                     <p><strong>Service Maintenance:</strong> ${totalServiceMaintenance.toFixed(2)}</p>
                     <p><strong>Other Maintenance & Repair:</strong> ${otherMaintenance.toFixed(2)}</p>
                     <p><strong>Total Expense for Ownership Period:</strong> ${totalExpense.toFixed(2)}</p>
+                </div>
+
+  		<div class="report-section">
+                    <h3>Car Resale Value Current</h3>
+		    <p><strong>Car Resale Value:</strong> ${resaleValue.toFixed(2)}</p>
                 </div>
             `;
             document.getElementById("expenseReport").innerHTML = reportHTML;
@@ -340,6 +350,7 @@
                 document.getElementById('serviceMaintenance').value = localStorage.getItem('serviceMaintenance');
                 document.getElementById('otherMaintenance').value = localStorage.getItem('otherMaintenance');
                 document.getElementById('monthsPaid').value = localStorage.getItem('monthsPaid');
+		document.getElementById('resaleValue').value = localStorage.getItem('resaleValue');
             } else {
                 alert('No saved data found!');
             }

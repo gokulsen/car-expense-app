@@ -58,6 +58,14 @@
             border: 1px solid #d1e7d1;
             display: none;
         }
+        .report-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .report-column {
+            width: 48%;
+        }
         .notes {
             margin-top: 20px;
             padding: 15px;
@@ -67,6 +75,12 @@
         .notes h3 {
             margin-top: 0;
         }
+		canvas {
+			width: 120% !important;
+			max-width: 350px; /* Adjust width */
+			height: 350px !important; /* Set a fixed height */
+		}
+
     </style>
 </head>
 <body>
@@ -118,130 +132,194 @@
         <!-- Right Column (Report Display) -->
         <div class="right-column">
             <h2>Expense Summary Report</h2>
-            <div id="expenseReport" class="report"></div>
+            <div class="report-container">
+                <div class="report-column" id="expenseReport" class="report"></div>
+                <div class="report-column">
+                    <canvas id="expenseChartToDate"></canvas>
+                    <canvas id="expenseChartOwnership"></canvas>
+                </div>
+            </div>
 
             <!-- Notes Section -->
             <div class="notes">
-				<h2>Notes</h2>
-				<textarea id="noteInput" placeholder="Type your note here..."style="width: calc(100% - 16px); height: 60px; font-size: 16px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
-				<button onclick="addNote()">Save Note</button>
-            <div class="notes-list" id="notesList"></div>
+                <h2>Notes</h2>
+                <textarea id="noteInput" placeholder="Type your note here..." style="width: calc(100% - 16px); height: 60px; font-size: 16px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
+                <button onclick="addNote()">Save Note</button>
+                <div class="notes-list" id="notesList"></div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         function generateReport() {
-             // Get inputs from user
-			const carModel = document.getElementById("carModel").value;
-			const downPayment = parseFloat(document.getElementById("downPayment").value);
-			const principal = parseFloat(document.getElementById("principal").value);
-			const interestRate = parseFloat(document.getElementById("interestRate").value);
-			const termMonths = parseInt(document.getElementById("termMonths").value);
-			const ownershipPeriod = parseInt(document.getElementById("ownershipPeriod").value);
-			const distance = parseInt(document.getElementById("distance").value);
-			const mileage = parseFloat(document.getElementById("mileage").value);
-			const fuelCost = parseFloat(document.getElementById("fuelCost").value);
-			const serviceMaintenance = parseFloat(document.getElementById("serviceMaintenance").value);
-			const otherMaintenance = parseFloat(document.getElementById("otherMaintenance").value);
-			const monthsPaid = parseInt(document.getElementById("monthsPaid").value);
+            // Get inputs from user
+            const carModel = document.getElementById("carModel").value;
+            const downPayment = parseFloat(document.getElementById("downPayment").value);
+            const principal = parseFloat(document.getElementById("principal").value);
+            const interestRate = parseFloat(document.getElementById("interestRate").value);
+            const termMonths = parseInt(document.getElementById("termMonths").value);
+            const ownershipPeriod = parseInt(document.getElementById("ownershipPeriod").value);
+            const distance = parseInt(document.getElementById("distance").value);
+            const mileage = parseFloat(document.getElementById("mileage").value);
+            const fuelCost = parseFloat(document.getElementById("fuelCost").value);
+            const serviceMaintenance = parseFloat(document.getElementById("serviceMaintenance").value);
+            const otherMaintenance = parseFloat(document.getElementById("otherMaintenance").value);
+            const monthsPaid = parseInt(document.getElementById("monthsPaid").value);
 
-			// EMI Calculation
-			const monthlyInterestRate = (interestRate / 100) / 12;
-			const emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / (Math.pow(1 + monthlyInterestRate, termMonths) - 1);
-			const totalLoanAmount = emi * termMonths;
+            // EMI Calculation
+            const monthlyInterestRate = (interestRate / 100) / 12;
+            const emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / (Math.pow(1 + monthlyInterestRate, termMonths) - 1);
+            const totalLoanAmount = emi * termMonths;
 
-			// EMI Paid to date
-			const emiPaidToDate = emi * monthsPaid;
+            // EMI Paid to date
+            const emiPaidToDate = emi * monthsPaid;
 
-			// Maintenance Cost Calculation
-			const ownershipPeriodInYears = ownershipPeriod / 12; // Convert months to years
-			const fuelConsumedPerYear = distance / mileage;
-			const totalFuelCost = fuelConsumedPerYear * fuelCost * ownershipPeriodInYears;
-			const totalServiceMaintenance = serviceMaintenance * ownershipPeriodInYears;
+            // Maintenance Cost Calculation
+            const ownershipPeriodInYears = ownershipPeriod / 12; // Convert months to years
+            const fuelConsumedPerYear = distance / mileage;
+            const totalFuelCost = fuelConsumedPerYear * fuelCost * ownershipPeriodInYears;
+            const totalServiceMaintenance = serviceMaintenance * ownershipPeriodInYears;
 
-			// Total Expenses Calculation
-			const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
-			const totalExpense = downPayment + totalLoanAmount + totalMaintenanceCost;
+            // Total Expenses Calculation
+            const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
+            const totalExpense = downPayment + totalLoanAmount + totalMaintenanceCost;
 
-			// Calculate expenses for months paid
-			const totalFuelCostPaid = fuelConsumedPerYear * fuelCost * (monthsPaid / 12);
-			const totalServiceMaintenancePaid = serviceMaintenance * (monthsPaid / 12);
-			const totalMaintenanceCostPaid = totalFuelCostPaid + totalServiceMaintenancePaid + otherMaintenance;
-			const totalExpensePaid = downPayment + emiPaidToDate + totalMaintenanceCostPaid;
+            // Calculate expenses for months paid
+            const totalFuelCostPaid = fuelConsumedPerYear * fuelCost * (monthsPaid / 12);
+            const totalServiceMaintenancePaid = serviceMaintenance * (monthsPaid / 12);
+            const totalMaintenanceCostPaid = totalFuelCostPaid + totalServiceMaintenancePaid + otherMaintenance;
+            const totalExpensePaid = downPayment + emiPaidToDate + totalMaintenanceCostPaid;
 
-			 // Generate and display the report
-			const reportHTML = `
-				<div class="report-section">
-					<h3>Car Details</h3>
-					<p><strong>Car Model:</strong> ${carModel}</p>
-				</div>
+            // Generate and display the report
+            const reportHTML = `
+                <div class="report-section">
+                    <h3>Car Details</h3>
+                    <p><strong>Car Model:</strong> ${carModel}</p>
+                </div>
 
-				<div class="report-section">
-					<h3>Loan Details</h3>
-					<p><strong>Down Payment:</strong> ₹${downPayment.toFixed(2)}</p>
-					<p><strong>EMI (Monthly):</strong> ₹${emi.toFixed(2)}</p>
-					<p><strong>Total Loan Amount:</strong> ₹${totalLoanAmount.toFixed(2)}</p>
-					<p><strong>EMI Paid to-date:</strong> ₹${emiPaidToDate.toFixed(2)}</p>
-				</div>
+                <div class="report-section">
+                    <h3>Loan Details</h3>
+                    <p><strong>Down Payment:</strong> ₹${downPayment.toFixed(2)}</p>
+                    <p><strong>EMI (Monthly):</strong> ₹${emi.toFixed(2)}</p>
+                    <p><strong>Total Loan Amount:</strong> ₹${totalLoanAmount.toFixed(2)}</p>
+                    <p><strong>EMI Paid to-date:</strong> ₹${emiPaidToDate.toFixed(2)}</p>
+                </div>
 
-				<div class="report-section">
-					<h3>Maintenance Cost for ${monthsPaid} Months To-Date</h3>
-					<p><strong>Fuel Cost (Paid):</strong> ₹${totalFuelCostPaid.toFixed(2)}</p>
-					<p><strong>Service Maintenance (Paid):</strong> ₹${totalServiceMaintenancePaid.toFixed(2)}</p>
-					<p><strong>Other Maintenance & Repair:</strong> ₹${otherMaintenance.toFixed(2)}</p>
-					<p><strong>Total Expense To-Date:</strong> ₹${totalExpensePaid.toFixed(2)}</p>
-				</div>
+                <div class="report-section">
+                    <h3>Maintenance Cost for ${monthsPaid} Months To-Date</h3>
+                    <p><strong>Fuel Cost (Paid):</strong> ₹${totalFuelCostPaid.toFixed(2)}</p>
+                    <p><strong>Service Maintenance (Paid):</strong> ₹${totalServiceMaintenancePaid.toFixed(2)}</p>
+                    <p><strong>Other Maintenance & Repair:</strong> ₹${otherMaintenance.toFixed(2)}</p>
+                    <p><strong>Total Expense To-Date:</strong> ₹${totalExpensePaid.toFixed(2)}</p>
+                </div>
 
-				<div class="report-section">
-					<h3>Maintenance Cost for ${ownershipPeriodInYears} Years</h3>
-					<p><strong>Fuel Cost (Total):</strong> ₹${totalFuelCost.toFixed(2)}</p>
-					<p><strong>Service Maintenance (Total):</strong> ₹${totalServiceMaintenance.toFixed(2)}</p>
-					<p><strong>Other Maintenance & Repair:</strong> ₹${otherMaintenance.toFixed(2)}</p>
-					<p><strong>Total Expense for Ownership Period:</strong> ₹${totalExpense.toFixed(2)}</p>
-				</div>
-			`;
+                <div class="report-section">
+                    <h3>Maintenance Cost for ${ownershipPeriodInYears} Years</h3>
+                    <p><strong>Fuel Cost (Total):</strong> ₹${totalFuelCost.toFixed(2)}</p>
+                    <p><strong>Service Maintenance (Total):</strong> ₹${totalServiceMaintenance.toFixed(2)}</p>
+                    <p><strong>Other Maintenance & Repair:</strong> ₹${otherMaintenance.toFixed(2)}</p>
+                    <p><strong>Total Expense for Ownership Period:</strong> ₹${totalExpense.toFixed(2)}</p>
+                </div>
+            `;
             document.getElementById("expenseReport").innerHTML = reportHTML;
             document.getElementById("expenseReport").style.display = "block";
-        }
 
-        function loadNotes() {
-            const notes = JSON.parse(localStorage.getItem('notes')) || [];
-            const notesList = document.getElementById('notesList');
-            notesList.innerHTML = '';
-            notes.forEach((note, index) => {
-                const noteElement = document.createElement('div');
-                noteElement.classList.add('note');
-                noteElement.innerHTML = `
-                    <p>${note}</p>
-                    <button onclick="deleteNote(${index})">Delete</button>
-                `;
-                notesList.appendChild(noteElement);
-            });
+            // Generate chart data for Maintenance Cost To-Date
+            const chartDataToDate = {
+                labels: ['Fuel Cost Paid', 'Service Maintenance Paid', 'Other Maintenance'],
+                datasets: [{
+                    label: 'Maintenance Cost To-Date',
+                    data: [totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const ctxToDate = document.getElementById('expenseChartToDate').getContext('2d');
+            if (!ctxToDate) {
+                console.error('Failed to get canvas context for expenseChartToDate');
+            } else {
+                console.log('Canvas context for expenseChartToDate retrieved successfully');
+            }
+
+            try {
+                new Chart(ctxToDate, {
+					type: 'pie',
+					data: chartDataToDate,
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						animation: {
+							duration: 1 // Disable animation
+						}
+					}
+				});
+            } catch (error) {
+                console.error('Error initializing chart for Maintenance Cost To-Date:', error);
+            }
+
+            // Generate chart data for Maintenance Cost Ownership Period
+            const chartDataOwnership = {
+                labels: ['Fuel Cost Total', 'Service Maintenance Total', 'Other Maintenance'],
+                datasets: [{
+                    label: 'Maintenance Cost Ownership Period',
+                    data: [totalFuelCost, totalServiceMaintenance, otherMaintenance],
+                    backgroundColor: [
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const ctxOwnership = document.getElementById('expenseChartOwnership').getContext('2d');
+            if (!ctxOwnership) {
+                console.error('Failed to get canvas context for expenseChartOwnership');
+            } else {
+                console.log('Canvas context for expenseChartOwnership retrieved successfully');
+            }
+
+            try {
+				new Chart(ctxOwnership, {
+					type: 'pie',
+					data: chartDataOwnership,
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						animation: {
+							duration: 1 // Disable animation
+						}
+					}
+				});
+            } catch (error) {
+                console.error('Error initializing chart for Maintenance Cost Ownership Period:', error);
+            }
         }
 
         function addNote() {
-            const noteInput = document.getElementById('noteInput');
-            const note = noteInput.value.trim();
-            if (!note) {
-                alert('Please enter a note.');
-                return;
-            }
-            const notes = JSON.parse(localStorage.getItem('notes')) || [];
-            notes.push(note);
-            localStorage.setItem('notes', JSON.stringify(notes));
-            noteInput.value = '';
-            loadNotes();
+            const note = document.getElementById("noteInput").value;
+            const notesList = document.getElementById("notesList");
+            const newNote = document.createElement("div");
+            newNote.textContent = note;
+            notesList.appendChild(newNote);
+            document.getElementById("noteInput").value = "";
         }
-
-        function deleteNote(index) {
-            const notes = JSON.parse(localStorage.getItem('notes')) || [];
-            notes.splice(index, 1);
-            localStorage.setItem('notes', JSON.stringify(notes));
-            loadNotes();
-        }
-
-        loadNotes();
     </script>
 </body>
 </html>

@@ -126,6 +126,7 @@
             <input type="number" id="ownershipPeriod" value="120">
 
             <button onclick="generateReport()">Generate Report</button>
+			<button onclick="loadLastSavedData()">Use Last Saved Data</button>
         </div>
 
         <!-- Right Column (Report Display) -->
@@ -170,6 +171,20 @@
             const serviceMaintenance = parseFloat(document.getElementById("serviceMaintenance").value);
             const otherMaintenance = parseFloat(document.getElementById("otherMaintenance").value);
             const monthsPaid = parseInt(document.getElementById("monthsPaid").value);
+			
+			// Save input values to localStorage
+            localStorage.setItem('carModel', carModel);
+            localStorage.setItem('downPayment', downPayment);
+            localStorage.setItem('principal', principal);
+            localStorage.setItem('interestRate', interestRate);
+            localStorage.setItem('termMonths', termMonths);
+            localStorage.setItem('ownershipPeriod', ownershipPeriod);
+            localStorage.setItem('distance', distance);
+            localStorage.setItem('mileage', mileage);
+            localStorage.setItem('fuelCost', fuelCost);
+            localStorage.setItem('serviceMaintenance', serviceMaintenance);
+            localStorage.setItem('otherMaintenance', otherMaintenance);
+            localStorage.setItem('monthsPaid', monthsPaid);
 
             // EMI Calculation
             const monthlyInterestRate = (interestRate / 100) / 12;
@@ -307,17 +322,64 @@
                 }
             });
         }
-
-        function addNote() {
-            const noteInput = document.getElementById('noteInput').value;
-            if (noteInput.trim() !== "") {
-                const notesList = document.getElementById('notesList');
-                const newNote = document.createElement('div');
-                newNote.innerHTML = `<p><strong>Note:</strong> ${noteInput}</p>`;
-                notesList.appendChild(newNote);
-                document.getElementById('noteInput').value = ""; // Clear note input after saving
+		
+		function loadLastSavedData() {
+            // Load saved data from localStorage
+            if (localStorage.getItem('carModel')) {
+                document.getElementById('carModel').value = localStorage.getItem('carModel');
+                document.getElementById('downPayment').value = localStorage.getItem('downPayment');
+                document.getElementById('principal').value = localStorage.getItem('principal');
+                document.getElementById('interestRate').value = localStorage.getItem('interestRate');
+                document.getElementById('termMonths').value = localStorage.getItem('termMonths');
+                document.getElementById('ownershipPeriod').value = localStorage.getItem('ownershipPeriod');
+                document.getElementById('distance').value = localStorage.getItem('distance');
+                document.getElementById('mileage').value = localStorage.getItem('mileage');
+                document.getElementById('fuelCost').value = localStorage.getItem('fuelCost');
+                document.getElementById('serviceMaintenance').value = localStorage.getItem('serviceMaintenance');
+                document.getElementById('otherMaintenance').value = localStorage.getItem('otherMaintenance');
+                document.getElementById('monthsPaid').value = localStorage.getItem('monthsPaid');
+            } else {
+                alert('No saved data found!');
             }
         }
+
+        function loadNotes() {
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            const notesList = document.getElementById('notesList');
+            notesList.innerHTML = '';
+            notes.forEach((note, index) => {
+                const noteElement = document.createElement('div');
+                noteElement.classList.add('note');
+                noteElement.innerHTML = `
+                    <p>${note}</p>
+                    <button onclick="deleteNote(${index})">Delete</button>
+                `;
+                notesList.appendChild(noteElement);
+            });
+        }
+
+        function addNote() {
+            const noteInput = document.getElementById('noteInput');
+            const note = noteInput.value.trim();
+            if (!note) {
+                alert('Please enter a note.');
+                return;
+            }
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            notes.push(note);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            noteInput.value = '';
+            loadNotes();
+        }
+
+        function deleteNote(index) {
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            notes.splice(index, 1);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            loadNotes();
+        }
+
+        loadNotes();
     </script>
 </body>
 </html>

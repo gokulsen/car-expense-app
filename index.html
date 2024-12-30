@@ -123,7 +123,7 @@
             <!-- Notes Section -->
             <div class="notes">
 				<h2>Notes</h2>
-				<textarea id="noteInput" placeholder="Type your note here..." style="width: calc(100% - 16px); height: 60px; font-size: 16px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
+				<textarea id="noteInput" placeholder="Type your note here..."style="width: calc(100% - 16px); height: 60px; font-size: 16px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
 				<button onclick="addNote()">Save Note</button>
             <div class="notes-list" id="notesList"></div>
             </div>
@@ -132,48 +132,75 @@
 
     <script>
         function generateReport() {
-            const carModel = document.getElementById("carModel").value;
-            const downPayment = parseFloat(document.getElementById("downPayment").value);
-            const principal = parseFloat(document.getElementById("principal").value);
-            const interestRate = parseFloat(document.getElementById("interestRate").value);
-            const termMonths = parseInt(document.getElementById("termMonths").value);
-            const monthsPaid = parseInt(document.getElementById("monthsPaid").value);
-            const distance = parseInt(document.getElementById("distance").value);
-            const mileage = parseFloat(document.getElementById("mileage").value);
-            const fuelCost = parseFloat(document.getElementById("fuelCost").value);
-            const serviceMaintenance = parseFloat(document.getElementById("serviceMaintenance").value);
-            const otherMaintenance = parseFloat(document.getElementById("otherMaintenance").value);
-            const ownershipPeriod = parseInt(document.getElementById("ownershipPeriod").value);
+             // Get inputs from user
+			const carModel = document.getElementById("carModel").value;
+			const downPayment = parseFloat(document.getElementById("downPayment").value);
+			const principal = parseFloat(document.getElementById("principal").value);
+			const interestRate = parseFloat(document.getElementById("interestRate").value);
+			const termMonths = parseInt(document.getElementById("termMonths").value);
+			const ownershipPeriod = parseInt(document.getElementById("ownershipPeriod").value);
+			const distance = parseInt(document.getElementById("distance").value);
+			const mileage = parseFloat(document.getElementById("mileage").value);
+			const fuelCost = parseFloat(document.getElementById("fuelCost").value);
+			const serviceMaintenance = parseFloat(document.getElementById("serviceMaintenance").value);
+			const otherMaintenance = parseFloat(document.getElementById("otherMaintenance").value);
+			const monthsPaid = parseInt(document.getElementById("monthsPaid").value);
 
-            const monthlyInterestRate = (interestRate / 100) / 12;
-            const emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / 
-                        (Math.pow(1 + monthlyInterestRate, termMonths) - 1);
-            const totalLoanAmount = emi * termMonths;
-            const emiPaidToDate = emi * monthsPaid;
-            const emiToBePaid = totalLoanAmount - emiPaidToDate;
+			// EMI Calculation
+			const monthlyInterestRate = (interestRate / 100) / 12;
+			const emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / (Math.pow(1 + monthlyInterestRate, termMonths) - 1);
+			const totalLoanAmount = emi * termMonths;
 
-            const ownershipPeriodInYears = ownershipPeriod / 12;
-            const fuelConsumedPerYear = distance / mileage;
-            const totalFuelCost = fuelConsumedPerYear * fuelCost * ownershipPeriodInYears;
-            const totalServiceMaintenance = serviceMaintenance * ownershipPeriodInYears;
-            const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
+			// EMI Paid to date
+			const emiPaidToDate = emi * monthsPaid;
 
-            const reportHTML = `
-                <div>
-                    <h3>Car Details</h3>
-                    <p><strong>Car Model:</strong> ${carModel}</p>
-                    <h3>Loan Details</h3>
-                    <p><strong>Down Payment:</strong> ₹${downPayment.toFixed(2)}</p>
-                    <p><strong>EMI (Monthly):</strong> ₹${emi.toFixed(2)}</p>
-                    <p><strong>Total Loan Amount:</strong> ₹${totalLoanAmount.toFixed(2)}</p>
-                    <p><strong>EMI Paid to Date:</strong> ₹${emiPaidToDate.toFixed(2)}</p>
-                    <p><strong>EMI Remaining:</strong> ₹${emiToBePaid.toFixed(2)}</p>
-                    <h3>Maintenance Costs</h3>
-                    <p><strong>Total Fuel Cost:</strong> ₹${totalFuelCost.toFixed(2)}</p>
-                    <p><strong>Total Service Maintenance:</strong> ₹${totalServiceMaintenance.toFixed(2)}</p>
-                    <p><strong>Total Maintenance Cost:</strong> ₹${totalMaintenanceCost.toFixed(2)}</p>
-                </div>
-            `;
+			// Maintenance Cost Calculation
+			const ownershipPeriodInYears = ownershipPeriod / 12; // Convert months to years
+			const fuelConsumedPerYear = distance / mileage;
+			const totalFuelCost = fuelConsumedPerYear * fuelCost * ownershipPeriodInYears;
+			const totalServiceMaintenance = serviceMaintenance * ownershipPeriodInYears;
+
+			// Total Expenses Calculation
+			const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
+			const totalExpense = downPayment + totalLoanAmount + totalMaintenanceCost;
+
+			// Calculate expenses for months paid
+			const totalFuelCostPaid = fuelConsumedPerYear * fuelCost * (monthsPaid / 12);
+			const totalServiceMaintenancePaid = serviceMaintenance * (monthsPaid / 12);
+			const totalMaintenanceCostPaid = totalFuelCostPaid + totalServiceMaintenancePaid + otherMaintenance;
+			const totalExpensePaid = downPayment + emiPaidToDate + totalMaintenanceCostPaid;
+
+			 // Generate and display the report
+			const reportHTML = `
+				<div class="report-section">
+					<h3>Car Details</h3>
+					<p><strong>Car Model:</strong> ${carModel}</p>
+				</div>
+
+				<div class="report-section">
+					<h3>Loan Details</h3>
+					<p><strong>Down Payment:</strong> ₹${downPayment.toFixed(2)}</p>
+					<p><strong>EMI (Monthly):</strong> ₹${emi.toFixed(2)}</p>
+					<p><strong>Total Loan Amount:</strong> ₹${totalLoanAmount.toFixed(2)}</p>
+					<p><strong>EMI Paid to-date:</strong> ₹${emiPaidToDate.toFixed(2)}</p>
+				</div>
+
+				<div class="report-section">
+					<h3>Maintenance Cost for ${monthsPaid} Months To-Date</h3>
+					<p><strong>Fuel Cost (Paid):</strong> ₹${totalFuelCostPaid.toFixed(2)}</p>
+					<p><strong>Service Maintenance (Paid):</strong> ₹${totalServiceMaintenancePaid.toFixed(2)}</p>
+					<p><strong>Other Maintenance & Repair:</strong> ₹${otherMaintenance.toFixed(2)}</p>
+					<p><strong>Total Expense To-Date:</strong> ₹${totalExpensePaid.toFixed(2)}</p>
+				</div>
+
+				<div class="report-section">
+					<h3>Maintenance Cost for ${ownershipPeriodInYears} Years</h3>
+					<p><strong>Fuel Cost (Total):</strong> ₹${totalFuelCost.toFixed(2)}</p>
+					<p><strong>Service Maintenance (Total):</strong> ₹${totalServiceMaintenance.toFixed(2)}</p>
+					<p><strong>Other Maintenance & Repair:</strong> ₹${otherMaintenance.toFixed(2)}</p>
+					<p><strong>Total Expense for Ownership Period:</strong> ₹${totalExpense.toFixed(2)}</p>
+				</div>
+			`;
             document.getElementById("expenseReport").innerHTML = reportHTML;
             document.getElementById("expenseReport").style.display = "block";
         }

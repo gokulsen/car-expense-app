@@ -20,15 +20,15 @@
             display: flex;
             width: 100%;
         }
-        .left-column, .right-column {
-            width: 50%;
-            padding: 20px;
-        }
         .left-column {
+			width: 30%;
+            padding: 20px;
             background-color: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .right-column {
+			width: 70%;
+            padding: 20px;
             background-color: #f9f9f9;
             margin-left: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -75,12 +75,11 @@
         .notes h3 {
             margin-top: 0;
         }
-		canvas {
-			width: 120% !important;
-			max-width: 350px; /* Adjust width */
-			height: 350px !important; /* Set a fixed height */
-		}
-
+        canvas {
+            width: 100% !important;
+            max-width: 400px;
+            height: auto !important;
+        }
     </style>
 </head>
 <body>
@@ -133,9 +132,14 @@
         <div class="right-column">
             <h2>Expense Summary Report</h2>
             <div class="report-container">
+                <!-- Expense Report Section -->
                 <div class="report-column" id="expenseReport" class="report"></div>
+
+                <!-- Two Columns for Charts -->
                 <div class="report-column">
                     <canvas id="expenseChartToDate"></canvas>
+                </div>
+                <div class="report-column">
                     <canvas id="expenseChartOwnership"></canvas>
                 </div>
             </div>
@@ -223,14 +227,14 @@
                 </div>
             `;
             document.getElementById("expenseReport").innerHTML = reportHTML;
-            document.getElementById("expenseReport").style.display = "block";
+            document.getElementById("expenseReport").style.display = 'block';
 
-            // Generate chart data for Maintenance Cost To-Date
+            // Generate the Bar Chart for Maintenance Cost To-Date
             const chartDataToDate = {
-                labels: ['Fuel Cost Paid', 'Service Maintenance Paid', 'Other Maintenance'],
+                labels: ['Car Cost', 'Fuel Cost Paid', 'Service Maintenance Paid', 'Other Maintenance'],
                 datasets: [{
                     label: 'Maintenance Cost To-Date',
-                    data: [totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance],
+                    data: [totalExpensePaid, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -244,36 +248,32 @@
                     borderWidth: 1
                 }]
             };
-
             const ctxToDate = document.getElementById('expenseChartToDate').getContext('2d');
-            if (!ctxToDate) {
-                console.error('Failed to get canvas context for expenseChartToDate');
-            } else {
-                console.log('Canvas context for expenseChartToDate retrieved successfully');
-            }
+            new Chart(ctxToDate, {
+                type: 'bar',
+                data: chartDataToDate,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
 
-            try {
-                new Chart(ctxToDate, {
-					type: 'pie',
-					data: chartDataToDate,
-					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						animation: {
-							duration: 1 // Disable animation
-						}
-					}
-				});
-            } catch (error) {
-                console.error('Error initializing chart for Maintenance Cost To-Date:', error);
-            }
-
-            // Generate chart data for Maintenance Cost Ownership Period
+            // Generate the Bar Chart for Maintenance Cost Ownership Period
             const chartDataOwnership = {
-                labels: ['Fuel Cost Total', 'Service Maintenance Total', 'Other Maintenance'],
+                labels: ['Car Cost', 'Fuel Cost Total', 'Service Maintenance Total', 'Other Maintenance'],
                 datasets: [{
                     label: 'Maintenance Cost Ownership Period',
-                    data: [totalFuelCost, totalServiceMaintenance, otherMaintenance],
+                    data: [totalExpense, totalFuelCost, totalServiceMaintenance, otherMaintenance],
                     backgroundColor: [
                         'rgba(153, 102, 255, 0.2)',
                         'rgba(75, 192, 192, 0.2)',
@@ -287,38 +287,36 @@
                     borderWidth: 1
                 }]
             };
-
             const ctxOwnership = document.getElementById('expenseChartOwnership').getContext('2d');
-            if (!ctxOwnership) {
-                console.error('Failed to get canvas context for expenseChartOwnership');
-            } else {
-                console.log('Canvas context for expenseChartOwnership retrieved successfully');
-            }
-
-            try {
-				new Chart(ctxOwnership, {
-					type: 'pie',
-					data: chartDataOwnership,
-					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						animation: {
-							duration: 1 // Disable animation
-						}
-					}
-				});
-            } catch (error) {
-                console.error('Error initializing chart for Maintenance Cost Ownership Period:', error);
-            }
+            new Chart(ctxOwnership, {
+                type: 'bar',
+                data: chartDataOwnership,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function addNote() {
-            const note = document.getElementById("noteInput").value;
-            const notesList = document.getElementById("notesList");
-            const newNote = document.createElement("div");
-            newNote.textContent = note;
-            notesList.appendChild(newNote);
-            document.getElementById("noteInput").value = "";
+            const noteInput = document.getElementById('noteInput').value;
+            if (noteInput.trim() !== "") {
+                const notesList = document.getElementById('notesList');
+                const newNote = document.createElement('div');
+                newNote.innerHTML = `<p><strong>Note:</strong> ${noteInput}</p>`;
+                notesList.appendChild(newNote);
+                document.getElementById('noteInput').value = ""; // Clear note input after saving
+            }
         }
     </script>
 </body>

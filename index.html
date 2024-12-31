@@ -193,49 +193,49 @@
         <div class="left-column">
             <h3>Vehicle Detail</h3>
             <label for="model">Model</label>
-            <input type="text" id="model" value="Yamaha FZ V2">
+            <input type="text" id="model" value="Vehicle Name">
 
             <h3>Loan Details</h3>
             <label for="downPayment">Down Payment</label>
-            <input type="number" id="downPayment" value="5000.00">
+            <input type="number" id="downPayment" step="0.01" value="5000.00">
 
             <label for="principal">Principal (Loan Amount)</label>
-            <input type="number" id="principal" value="100000.00">
+            <input type="number" id="principal" step="0.01" value="100000.00">
 
             <label for="interestRate">Rate of Interest (%)</label>
-            <input type="number" id="interestRate" value="8.85">
+            <input type="number" id="interestRate" step="0.01" value="8.85">
 
             <label for="termMonths">Term (Months)</label>
             <input type="number" id="termMonths" value="60">
 
             <label for="monthsPaid">Months Paid</label>
             <input type="number" id="monthsPaid" value="48">
-			
-			<label for="emiPaidInAdvance">EMI Paid in Advance </label>
-            <input type="number" id="emiPaidInAdvance" value="4536.8">
+
+            <label for="emiPaidInAdvance">EMI Paid in Advance</label>
+            <input type="number" id="emiPaidInAdvance" step="0.01" value="4536.80">
 
             <h3>Maintenance Details</h3>
             <label for="distance">Distance Ran Per Year (km)</label>
             <input type="number" id="distance" value="5000">
 
             <label for="mileage">Mileage (km/l)</label>
-            <input type="number" id="mileage" value="30">
+            <input type="number" id="mileage" step="0.01" value="30">
 
             <label for="fuelCost">Fuel Cost per Litre</label>
-            <input type="number" id="fuelCost" value="101.00">
+            <input type="number" id="fuelCost" step="0.01" value="101.00">
 
             <label for="serviceMaintenance">Service Maintenance (per Year)</label>
-            <input type="number" id="serviceMaintenance" value="1500.00">
+            <input type="number" id="serviceMaintenance" step="0.01" value="1500.00">
 
             <label for="otherMaintenance">Other Maintenance & Repair</label>
-            <input type="number" id="otherMaintenance" value="10000.00">
+            <input type="number" id="otherMaintenance" step="0.01" value="10000.00">
 
             <label for="ownershipPeriod">Ownership Period (Months) (Tentative)</label>
             <input type="number" id="ownershipPeriod" value="120">
 
-			<h3>Vehicle Resale Value</h3>
-			<label for="resaleValue">Resale Value</label>
-      		<input type="number" id="resaleValue" value="40000">
+            <h3>Vehicle Resale Value</h3>
+            <label for="resaleValue">Resale Value</label>
+            <input type="number" id="resaleValue" step="0.01" value="40000">
 
          	<button onclick="generateReport()">Generate Report</button>
 			<button onclick="loadLastSavedData()">Use Last Saved Data</button>
@@ -270,22 +270,25 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script>
+	        function formatToTwoDecimals(value) {
+            return Math.round(value * 100) / 100;
+        }
         function generateReport() {
             // Get inputs from user
             const model = document.getElementById("model").value;
-            const downPayment = parseFloat(document.getElementById("downPayment").value);
-            const principal = parseFloat(document.getElementById("principal").value);
-            const interestRate = parseFloat(document.getElementById("interestRate").value);
+            const downPayment = formatToTwoDecimals(parseFloat(document.getElementById("downPayment").value));
+            const principal = formatToTwoDecimals(parseFloat(document.getElementById("principal").value));
+            const interestRate = formatToTwoDecimals(parseFloat(document.getElementById("interestRate").value));
             const termMonths = parseInt(document.getElementById("termMonths").value);
-			const emiPaidInAdvance = parseInt(document.getElementById("emiPaidInAdvance").value);
+            const emiPaidInAdvance = formatToTwoDecimals(parseFloat(document.getElementById("emiPaidInAdvance").value));
             const ownershipPeriod = parseInt(document.getElementById("ownershipPeriod").value);
             const distance = parseInt(document.getElementById("distance").value);
-            const mileage = parseFloat(document.getElementById("mileage").value);
-            const fuelCost = parseFloat(document.getElementById("fuelCost").value);
-            const serviceMaintenance = parseFloat(document.getElementById("serviceMaintenance").value);
-            const otherMaintenance = parseFloat(document.getElementById("otherMaintenance").value);
+            const mileage = formatToTwoDecimals(parseFloat(document.getElementById("mileage").value));
+            const fuelCost = formatToTwoDecimals(parseFloat(document.getElementById("fuelCost").value));
+            const serviceMaintenance = formatToTwoDecimals(parseFloat(document.getElementById("serviceMaintenance").value));
+            const otherMaintenance = formatToTwoDecimals(parseFloat(document.getElementById("otherMaintenance").value));
             const monthsPaid = parseInt(document.getElementById("monthsPaid").value);
-			const resaleValue = parseInt(document.getElementById("resaleValue").value);
+            const resaleValue = formatToTwoDecimals(parseFloat(document.getElementById("resaleValue").value));
 			
 	// Save input values to localStorage
             localStorage.setItem('model', model);
@@ -305,30 +308,31 @@
 
             // EMI Calculation
             const monthlyInterestRate = (interestRate / 100) / 12;
-            const emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / (Math.pow(1 + monthlyInterestRate, termMonths) - 1);
-            const totalLoanAmount = emi * termMonths;
+            const emi = formatToTwoDecimals((principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, termMonths)) / (Math.pow(1 + monthlyInterestRate, termMonths) - 1));
+            const totalLoanAmount = formatToTwoDecimals(emi * termMonths);
+            
+			// EMI Paid to date
+			const emiPaidToDate = formatToTwoDecimals(emi * monthsPaid + emiPaidInAdvance);
+            const emiToBePaid = formatToTwoDecimals(totalLoanAmount - emiPaidToDate);
 
-            // EMI Paid to date
-            const emiPaidToDate = emi * monthsPaid + emiPaidInAdvance;
-			const emiToBePaid = totalLoanAmount - emiPaidToDate;
-
-            // Maintenance Cost Calculation
-            const ownershipPeriodInYears = ownershipPeriod / 12; // Convert months to years
+			// Maintenance Cost Calculation
+            const ownershipPeriodInYears = ownershipPeriod / 12;
             const fuelConsumedPerYear = distance / mileage;
-            const totalFuelCost = fuelConsumedPerYear * fuelCost * ownershipPeriodInYears;
-            const totalServiceMaintenance = serviceMaintenance * ownershipPeriodInYears;
+            const totalFuelCost = formatToTwoDecimals(fuelConsumedPerYear * fuelCost * ownershipPeriodInYears);
+            const totalServiceMaintenance = formatToTwoDecimals(serviceMaintenance * ownershipPeriodInYears);
 
-            // Total Expenses Calculation
-			const vehicleCost = downPayment + totalLoanAmount;
-            const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
-            const totalExpense = downPayment + totalLoanAmount + totalMaintenanceCost;
+			// Total Expenses Calculation
+            const vehicleCost = formatToTwoDecimals(downPayment + totalLoanAmount);
+            const totalMaintenanceCost = formatToTwoDecimals(totalFuelCost + totalServiceMaintenance + otherMaintenance);
+            const totalExpense = formatToTwoDecimals(vehicleCost + totalMaintenanceCost);
 
-            // Calculate expenses for months paid
-            const vehicleCostToDate = downPayment + emiPaidToDate;
-			const totalFuelCostPaid = fuelConsumedPerYear * fuelCost * (monthsPaid / 12);
-            const totalServiceMaintenancePaid = serviceMaintenance * (monthsPaid / 12);
-            const totalMaintenanceCostPaid = totalFuelCostPaid + totalServiceMaintenancePaid + otherMaintenance;
-            const totalExpensePaid = downPayment + emiPaidToDate + totalMaintenanceCostPaid;
+			// Calculate expenses for months paid
+            const vehicleCostToDate = formatToTwoDecimals(downPayment + emiPaidToDate);
+            const totalFuelCostPaid = formatToTwoDecimals(fuelConsumedPerYear * fuelCost * (monthsPaid / 12));
+            const totalServiceMaintenancePaid = formatToTwoDecimals(serviceMaintenance * (monthsPaid / 12));
+            const totalMaintenanceCostPaid = formatToTwoDecimals(totalFuelCostPaid + totalServiceMaintenancePaid + otherMaintenance);
+            const totalExpensePaid = formatToTwoDecimals(vehicleCostToDate + totalMaintenanceCostPaid);
+
 
             // Generate and display the report
             const reportHTML = `

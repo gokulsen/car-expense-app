@@ -249,6 +249,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script>
         function generateReport() {
             // Get inputs from user
@@ -281,7 +282,7 @@
             localStorage.setItem('serviceMaintenance', serviceMaintenance);
             localStorage.setItem('otherMaintenance', otherMaintenance);
             localStorage.setItem('monthsPaid', monthsPaid);
-	    localStorage.setItem('resaleValue', resaleValue);
+			localStorage.setItem('resaleValue', resaleValue);
 
             // EMI Calculation
             const monthlyInterestRate = (interestRate / 100) / 12;
@@ -357,14 +358,15 @@
             document.getElementById("expenseReport").innerHTML = reportHTML;
             document.getElementById("expenseReport").style.display = 'block';
 
-            // Determine the maximum value across all datasets for consistent Y-axis scaling
-			const maxYValueT = Math.max(
+			// Add Chart.js DataLabels plugin
+			Chart.register(ChartDataLabels);
+
+			// Determine the maximum value across all datasets and round it to the next greater million
+			const maxYValue = Math.max(
 				...[carCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance,
 				   carCost, totalFuelCost, totalServiceMaintenance, otherMaintenance]
 			);
-			
-			// Round up maxYValue to the next greater value (e.g., nearest multiple of 10)
-			maxYValue = Math.ceil(maxYValueT / 1000000) * 1000000;
+			const maxYValueRounded = Math.ceil(maxYValue / 1000000) * 1000000;
 
 			// Generate the Bar Chart for Maintenance Cost To-Date
 			const chartDataToDate = {
@@ -384,11 +386,25 @@
 				options: {
 					responsive: true,
 					maintainAspectRatio: false,
+					plugins: {
+						datalabels: {
+							anchor: 'end',
+							align: 'end',
+							color: '#000', // Text color
+							font: {
+								size: 12,
+								weight: 'bold'
+							},
+							formatter: function(value) {
+								return value.toLocaleString(); // Format value with commas
+							}
+						}
+					},
 					scales: {
 						y: {
 							beginAtZero: true,
-							min: 0, // Start at zero
-							max: maxYValue, // Set the maximum value
+							min: 0,
+							max: maxYValueRounded,
 							ticks: {
 								callback: function(value) {
 									return '' + value.toLocaleString();
@@ -417,11 +433,25 @@
 				options: {
 					responsive: true,
 					maintainAspectRatio: false,
+					plugins: {
+						datalabels: {
+							anchor: 'end',
+							align: 'end',
+							color: '#000', // Text color
+							font: {
+								size: 12,
+								weight: 'bold'
+							},
+							formatter: function(value) {
+								return value.toLocaleString(); // Format value with commas
+							}
+						}
+					},
 					scales: {
 						y: {
 							beginAtZero: true,
-							min: 0, // Start at zero
-							max: maxYValue, // Set the maximum value
+							min: 0,
+							max: maxYValueRounded,
 							ticks: {
 								callback: function(value) {
 									return '' + value.toLocaleString();
@@ -431,7 +461,6 @@
 					}
 				}
 			});
-
         }
 		
 		function loadLastSavedData() {

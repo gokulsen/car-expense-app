@@ -5,88 +5,138 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Loan and Maintenance Calculator</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-        .container {
-            display: flex;
-            width: 100%;
-        }
-        .left-column {
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			background-color: #f4f4f9;
+			margin: 0;
+			padding: 0;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			flex-direction: column;
+			box-sizing: border-box;
+			background-color: #e9ecef; /* Light background color for body */
+		}
+		.container {
+			display: flex;
+			width: 90%;
+			max-width: 1200px;
+			padding: 20px;
+			background-color: #fff; /* White background for the container */
+			border-radius: 12px;
+		}
+		.left-column {
 			width: 30%;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .right-column {
+			padding: 20px;
+			background-color: #ffffff; /* Light white background for left column */
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			border-radius: 8px;
+			border: 1px solid #ddd; /* Border for left column */
+		}
+		.right-column {
 			width: 70%;
-            padding: 20px;
-            background-color: #f9f9f9;
-            margin-left: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            text-align: center;
-        }
-        label, input, button {
-            width: 100%;
-            margin: 10px 0;
-            padding: 8px;
-        }
-        input {
-            width: 100%;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .report {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #e7f5e7;
-            border: 1px solid #d1e7d1;
-            display: none;
-        }
-        .report-container {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-        }
-        .report-column {
-            width: 48%;
-        }
+			padding: 20px;
+			background-color: #f8f9fa; /* Slightly darker background for right column */
+			margin-left: 20px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			border-radius: 8px;
+			border: 1px solid #ddd; /* Border for right column */
+		}
+		h2 {
+			text-align: center;
+			font-size: 24px;
+			font-weight: 600;
+			color: #495057; /* Darker text for heading */
+		}
+		label {
+			font-weight: bold;
+			color: #343a40; /* Dark text color for labels */
+		}
+		input {
+			width: 100%;
+			padding: 8px;
+			border: 1px solid #ced4da; /* Light border color for input fields */
+			border-radius: 4px;
+			margin: 8px 0;
+			background-color: #ffffff;
+			font-size: 16px;
+		}
+		input:focus {
+			border-color: #80bdff; /* Focused input field color */
+			outline: none;
+		}
+		button {
+			background-color: #007bff; /* Blue background for button */
+			color: white;
+			border: none;
+			font-size: 16px;
+			cursor: pointer;
+			border-radius: 4px;
+			transition: background-color 0.3s, transform 0.2s;
+			padding: 10px;
+		}
+		button:hover {
+			background-color: #0056b3; /* Darker blue when hovering over the button */
+		}
+		button:active {
+			background-color: #004085; /* Even darker blue when button is clicked */
+		}
+		.report {
+			margin-top: 20px;
+			padding: 15px;
+			background-color: #d4edda; /* Light green background for report */
+			border: 1px solid #c3e6cb; /* Border color for report */
+			display: none;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			border-radius: 8px;
+		}
+		.report-container {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+		}
+		.report-column {
+			width: 48%;
+		}
 		.report hr {
 			border: 0;
 			height: 1px;
 			background: #ccc;
 			margin: 10px 0;
 		}
-        .notes {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f7f9fc;
-            border: 1px solid #dcdcdc;
-        }
-        .notes h3 {
-            margin-top: 0;
-        }
-        canvas {
-            width: 100% !important;
-            max-width: 400px;
-            height: 900px !important;
-        }
-    </style>
+		.notes {
+			margin-top: 20px;
+			padding: 15px;
+			background-color: #f8d7da; /* Light red background for notes */
+			border: 1px solid #f5c6cb; /* Border color for notes */
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			border-radius: 8px;
+		}
+		.notes h3 {
+			margin-top: 0;
+			color: #721c24; /* Dark red color for note headings */
+		}
+		canvas {
+			width: 100% !important;
+			max-width: 400px;
+			height: auto !important;
+			display: block;
+		}
+
+		/* Mobile responsiveness */
+		@media screen and (max-width: 768px) {
+			.container {
+				flex-direction: column;
+			}
+			.left-column, .right-column {
+				width: 100%;
+				margin-left: 0;
+			}
+		}
+	</style>
+
+
 </head>
 <body>
     <div class="container">

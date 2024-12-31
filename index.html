@@ -128,12 +128,12 @@
             <label for="ownershipPeriod">Ownership Period (Months) (Tentative)</label>
             <input type="number" id="ownershipPeriod" value="120">
 
-			<h3>Car Resale Value</h3
-			<label for="resaleValue">Resale Value</label>
-            <input type="number" id="resaleValue" value="1000000">
+		<h3>Car Resale Value</h3
+		<label for="resaleValue">Resale Value</label>
+      		<input type="number" id="resaleValue" value="1000000">
 
-            <button onclick="generateReport()">Generate Report</button>
-			<button onclick="loadLastSavedData()">Use Last Saved Data</button>
+         	<button onclick="generateReport()">Generate Report</button>
+		<button onclick="loadLastSavedData()">Use Last Saved Data</button>
         </div>
 
         <!-- Right Column (Report Display) -->
@@ -171,7 +171,7 @@
             const principal = parseFloat(document.getElementById("principal").value);
             const interestRate = parseFloat(document.getElementById("interestRate").value);
             const termMonths = parseInt(document.getElementById("termMonths").value);
-			const emiPaidInAdvance = parseInt(document.getElementById("emiPaidInAdvance").value);
+	    const emiPaidInAdvance = parseInt(document.getElementById("emiPaidInAdvance").value);
             const ownershipPeriod = parseInt(document.getElementById("ownershipPeriod").value);
             const distance = parseInt(document.getElementById("distance").value);
             const mileage = parseFloat(document.getElementById("mileage").value);
@@ -203,9 +203,8 @@
             const totalLoanAmount = emi * termMonths;
 
             // EMI Paid to date
-            const emiPaidToDate = emi * monthsPaid;
+            const emiPaidToDate = emi * monthsPaid + emiPaidInAdvance;
 	    const emiToBePaid = totalLoanAmount - emiPaidToDate - emiPaidInAdvance;
-	    const emiPaidInAdvanceReport = emiPaidToDate + emiPaidInAdvance;
 
             // Maintenance Cost Calculation
             const ownershipPeriodInYears = ownershipPeriod / 12; // Convert months to years
@@ -239,7 +238,7 @@
                     <p><strong>Total Loan Amount:</strong> ${totalLoanAmount.toFixed(2)}</p>
                     <p><strong>EMI Paid To-Date:</strong> ${emiPaidToDate.toFixed(2)}</p>
 					<p><strong>EMI Paid To-Be:</strong> ${emiToBePaid.toFixed(2)}</p>
-					<p><strong>EMI Paid In Advance:</strong> ${emiPaidInAdvanceReport.toFixed(2)}</p>
+					<p><strong>EMI Paid In Advance:</strong> ${emiPaidInAdvance.toFixed(2)}</p>
                 </div>
 
                 <div class="report-section">

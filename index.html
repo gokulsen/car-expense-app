@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Loan and Maintenance Calculator</title>
+    <title>Vehicle Loan and Maintenance Calculator</title>
 	<style>
 		body {
 			font-family: Arial, sans-serif;
@@ -186,56 +186,56 @@
 <body>
     <header>
         <!--<img src="C:\Users\09184G744\OneDrive - IBM\Desktop\logo.png" alt="Logo" class="logo">-->
-		<span class="branding-text">Car Expense Calculator</span>
+		<span class="branding-text">Vehicle Expense Calculator</span>
     </header>
     <div class="container">
         <!-- Left Column (Input Form) -->
         <div class="left-column">
-            <h3>Car Detail</h3>
-            <label for="carModel">Car Model</label>
-            <input type="text" id="carModel" value="Kia Seltos HTK+ Petrol Manual">
+            <h3>Vehicle Detail</h3>
+            <label for="model">Model</label>
+            <input type="text" id="model" value="Yamaha FZ V2">
 
             <h3>Loan Details</h3>
             <label for="downPayment">Down Payment</label>
-            <input type="number" id="downPayment" value="350000.00">
+            <input type="number" id="downPayment" value="5000.00">
 
             <label for="principal">Principal (Loan Amount)</label>
-            <input type="number" id="principal" value="1100000.00">
+            <input type="number" id="principal" value="100000.00">
 
             <label for="interestRate">Rate of Interest (%)</label>
             <input type="number" id="interestRate" value="8.85">
 
             <label for="termMonths">Term (Months)</label>
-            <input type="number" id="termMonths" value="84">
+            <input type="number" id="termMonths" value="60">
 
             <label for="monthsPaid">Months Paid</label>
-            <input type="number" id="monthsPaid" value="57">
+            <input type="number" id="monthsPaid" value="48">
 			
 			<label for="emiPaidInAdvance">EMI Paid in Advance </label>
-            <input type="number" id="emiPaidInAdvance" value="47536.8">
+            <input type="number" id="emiPaidInAdvance" value="4536.8">
 
             <h3>Maintenance Details</h3>
             <label for="distance">Distance Ran Per Year (km)</label>
-            <input type="number" id="distance" value="10000">
+            <input type="number" id="distance" value="5000">
 
             <label for="mileage">Mileage (km/l)</label>
-            <input type="number" id="mileage" value="14">
+            <input type="number" id="mileage" value="30">
 
-            <label for="fuelCost">Fuel Cost per Liter</label>
-            <input type="number" id="fuelCost" value="105.00">
+            <label for="fuelCost">Fuel Cost per Litre</label>
+            <input type="number" id="fuelCost" value="101.00">
 
             <label for="serviceMaintenance">Service Maintenance (per Year)</label>
-            <input type="number" id="serviceMaintenance" value="12000.00">
+            <input type="number" id="serviceMaintenance" value="1500.00">
 
             <label for="otherMaintenance">Other Maintenance & Repair</label>
-            <input type="number" id="otherMaintenance" value="67000.00">
+            <input type="number" id="otherMaintenance" value="10000.00">
 
             <label for="ownershipPeriod">Ownership Period (Months) (Tentative)</label>
             <input type="number" id="ownershipPeriod" value="120">
 
-			<h3>Car Resale Value</h3>
+			<h3>Vehicle Resale Value</h3>
 			<label for="resaleValue">Resale Value</label>
-      		<input type="number" id="resaleValue" value="1000000">
+      		<input type="number" id="resaleValue" value="40000">
 
          	<button onclick="generateReport()">Generate Report</button>
 			<button onclick="loadLastSavedData()">Use Last Saved Data</button>
@@ -272,7 +272,7 @@
     <script>
         function generateReport() {
             // Get inputs from user
-            const carModel = document.getElementById("carModel").value;
+            const model = document.getElementById("model").value;
             const downPayment = parseFloat(document.getElementById("downPayment").value);
             const principal = parseFloat(document.getElementById("principal").value);
             const interestRate = parseFloat(document.getElementById("interestRate").value);
@@ -288,7 +288,7 @@
 			const resaleValue = parseInt(document.getElementById("resaleValue").value);
 			
 	// Save input values to localStorage
-            localStorage.setItem('carModel', carModel);
+            localStorage.setItem('model', model);
             localStorage.setItem('downPayment', downPayment);
             localStorage.setItem('principal', principal);
             localStorage.setItem('interestRate', interestRate);
@@ -319,12 +319,12 @@
             const totalServiceMaintenance = serviceMaintenance * ownershipPeriodInYears;
 
             // Total Expenses Calculation
-			const carCost = downPayment + totalLoanAmount;
+			const vehicleCost = downPayment + totalLoanAmount;
             const totalMaintenanceCost = totalFuelCost + totalServiceMaintenance + otherMaintenance;
             const totalExpense = downPayment + totalLoanAmount + totalMaintenanceCost;
 
             // Calculate expenses for months paid
-            const carCostToDate = downPayment + emiPaidToDate;
+            const vehicleCostToDate = downPayment + emiPaidToDate;
 			const totalFuelCostPaid = fuelConsumedPerYear * fuelCost * (monthsPaid / 12);
             const totalServiceMaintenancePaid = serviceMaintenance * (monthsPaid / 12);
             const totalMaintenanceCostPaid = totalFuelCostPaid + totalServiceMaintenancePaid + otherMaintenance;
@@ -333,8 +333,8 @@
             // Generate and display the report
             const reportHTML = `
                 <div class="report-section">
-                    <h3>Car Details</h3>
-                    <p><strong>Car Model:</strong> ${carModel}</p>
+                    <h3>Vehicle Details</h3>
+                    <p><strong>Vehicle Model:</strong> ${model}</p>
 					<hr>
                 </div>
 
@@ -351,7 +351,7 @@
 
                 <div class="report-section">
                     <h3>Maintenance Cost for ${monthsPaid} Months To-Date</h3>
-                    <p><strong>Car Cost:</strong> ${carCostToDate.toFixed(2)}</p>
+                    <p><strong>Vehicle Cost:</strong> ${vehicleCostToDate.toFixed(2)}</p>
 					<p><strong>Fuel Cost:</strong> ${totalFuelCostPaid.toFixed(2)}</p>
                     <p><strong>Service Maintenance:</strong> ${totalServiceMaintenancePaid.toFixed(2)}</p>
                     <p><strong>Other Maintenance & Repair:</strong> ${otherMaintenance.toFixed(2)}</p>
@@ -361,7 +361,7 @@
 
                 <div class="report-section">
                     <h3>Maintenance Cost for ${ownershipPeriodInYears} Years</h3>
-					<p><strong>Car Cost:</strong> ${carCost.toFixed(2)}</p>
+					<p><strong>Vehicle Cost:</strong> ${vehicleCost.toFixed(2)}</p>
                     <p><strong>Fuel Cost:</strong> ${totalFuelCost.toFixed(2)}</p>
                     <p><strong>Service Maintenance:</strong> ${totalServiceMaintenance.toFixed(2)}</p>
                     <p><strong>Other Maintenance & Repair:</strong> ${otherMaintenance.toFixed(2)}</p>
@@ -370,7 +370,7 @@
                 </div>
 
 				<div class="report-section">
-                    <h3>Car Resale Value</h3>
+                    <h3>Vehicle Resale Value</h3>
 					<p><strong>Current Resale Value:</strong> ${resaleValue.toFixed(2)}</p>
                 </div>
             `;
@@ -382,17 +382,17 @@
 
 			// Determine the maximum value across all datasets and round it to the next greater million
 			const maxYValue = Math.max(
-				...[carCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance,
-				   carCost, totalFuelCost, totalServiceMaintenance, otherMaintenance]
+				...[vehicleCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance,
+				   vehicleCost, totalFuelCost, totalServiceMaintenance, otherMaintenance]
 			);
-			const maxYValueRounded = Math.ceil(maxYValue / 1000000) * 1000000;
+			const maxYValueRounded = Math.ceil(maxYValue / 100000) * 100000;
 
 			// Generate the Bar Chart for Maintenance Cost To-Date
 			const chartDataToDate = {
-				labels: ['Car Cost', 'Fuel Cost Paid', 'Service Maintenance Paid', 'Other Maintenance'],
+				labels: ['Vehicle Cost', 'Fuel Cost Paid', 'Service Maintenance Paid', 'Other Maintenance'],
 				datasets: [{
 					label: 'Expense To-Date',
-					data: [carCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance],
+					data: [vehicleCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance],
 					backgroundColor: '#2985A5',
 					borderColor: '#ccccc',
 					borderWidth: 1
@@ -436,10 +436,10 @@
 
 			// Generate the Bar Chart for Maintenance Cost Ownership Period
 			const chartDataOwnership = {
-				labels: ['Car Cost', 'Fuel Cost Total', 'Service Maintenance Total', 'Other Maintenance'],
+				labels: ['Vehicle Cost', 'Fuel Cost Total', 'Service Maintenance Total', 'Other Maintenance'],
 				datasets: [{
 					label: 'Expense Ownership Period',
-					data: [carCost, totalFuelCost, totalServiceMaintenance, otherMaintenance],
+					data: [vehicleCost, totalFuelCost, totalServiceMaintenance, otherMaintenance],
 					backgroundColor: '#2985A5',
 					borderColor: '#ccccc',
 					borderWidth: 1
@@ -484,8 +484,8 @@
 		
 		function loadLastSavedData() {
             // Load saved data from localStorage
-            if (localStorage.getItem('carModel')) {
-                document.getElementById('carModel').value = localStorage.getItem('carModel');
+            if (localStorage.getItem('model')) {
+                document.getElementById('model').value = localStorage.getItem('model');
                 document.getElementById('downPayment').value = localStorage.getItem('downPayment');
                 document.getElementById('principal').value = localStorage.getItem('principal');
                 document.getElementById('interestRate').value = localStorage.getItem('interestRate');

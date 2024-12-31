@@ -106,8 +106,8 @@
             <label for="monthsPaid">Months Paid</label>
             <input type="number" id="monthsPaid" value="57">
 			
-			<label for="emiPaidInAdvance">EMI Paid in Advance </label>
-            <input type="number" id="emiPaidInAdvance" value="57">
+	    <label for="emiPaidInAdvance">EMI Paid in Advance </label>
+            <input type="number" id="emiPaidInAdvance" value="47536.8">
 
             <h3>Maintenance Details</h3>
             <label for="distance">Distance Ran Per Year (km)</label>
@@ -204,8 +204,8 @@
 
             // EMI Paid to date
             const emiPaidToDate = emi * monthsPaid;
-			const emiToBePaid = totalLoanAmount - emiPaidToDate;
-			const emiPaidInAdvanceReport = emiPaidToDate + emiPaidInAdvance;
+	    const emiToBePaid = totalLoanAmount - emiPaidToDate - emiPaidInAdvance;
+	    const emiPaidInAdvanceReport = emiPaidToDate + emiPaidInAdvance;
 
             // Maintenance Cost Calculation
             const ownershipPeriodInYears = ownershipPeriod / 12; // Convert months to years

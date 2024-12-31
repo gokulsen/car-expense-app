@@ -204,7 +204,7 @@
 
             // EMI Paid to date
             const emiPaidToDate = emi * monthsPaid + emiPaidInAdvance;
-	    const emiToBePaid = totalLoanAmount - emiPaidToDate - emiPaidInAdvance;
+	    const emiToBePaid = totalLoanAmount - emiPaidToDate;
 
             // Maintenance Cost Calculation
             const ownershipPeriodInYears = ownershipPeriod / 12; // Convert months to years
@@ -237,7 +237,7 @@
                     <p><strong>EMI (Monthly):</strong> ${emi.toFixed(2)}</p>
                     <p><strong>Total Loan Amount:</strong> ${totalLoanAmount.toFixed(2)}</p>
                     <p><strong>EMI Paid To-Date:</strong> ${emiPaidToDate.toFixed(2)}</p>
-					<p><strong>EMI Paid To-Be:</strong> ${emiToBePaid.toFixed(2)}</p>
+					<p><strong>EMI Due:</strong> ${emiToBePaid.toFixed(2)}</p>
 					<p><strong>EMI Paid In Advance:</strong> ${emiPaidInAdvance.toFixed(2)}</p>
                 </div>
 

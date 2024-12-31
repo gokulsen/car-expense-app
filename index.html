@@ -4,144 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Loan and Maintenance Calculator</title>
-    <style>
-		body {
-			font-family: Arial, sans-serif;
-			display: flex;
-			background-color: #f4f4f9;
-			margin: 0;
-			padding: 0;
-			justify-content: center;
-			align-items: center;
-			min-height: 100vh;
-			flex-direction: column;
-			box-sizing: border-box;
-			background-color: #e9ecef; /* Light background color for body */
-		}
-		.container {
-			display: flex;
-			width: 90%;
-			max-width: 1200px;
-			padding: 20px;
-			background-color: #fff; /* White background for the container */
-			border-radius: 12px;
-		}
-		.left-column {
-			width: 30%;
-			padding: 20px;
-			background-color: #ffffff; /* Light white background for left column */
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-			border-radius: 8px;
-			border: 1px solid #ddd; /* Border for left column */
-		}
-		.right-column {
-			width: 70%;
-			padding: 20px;
-			background-color: #f8f9fa; /* Slightly darker background for right column */
-			margin-left: 20px;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-			border-radius: 8px;
-			border: 1px solid #ddd; /* Border for right column */
-		}
-		h2 {
-			text-align: center;
-			font-size: 24px;
-			font-weight: 600;
-			color: #495057; /* Darker text for heading */
-		}
-		label {
-			font-weight: bold;
-			color: #343a40; /* Dark text color for labels */
-		}
-		input {
-			width: 100%;
-			padding: 8px;
-			border: 1px solid #ced4da; /* Light border color for input fields */
-			border-radius: 4px;
-			margin: 8px 0;
-			background-color: #ffffff;
-			font-size: 16px;
-		}
-		input:focus {
-			border-color: #80bdff; /* Focused input field color */
-			outline: none;
-		}
-		button {
-			background-color: #007bff; /* Blue background for button */
-			color: white;
-			border: none;
-			font-size: 16px;
-			cursor: pointer;
-			border-radius: 4px;
-			transition: background-color 0.3s, transform 0.2s;
-			padding: 10px;
-		}
-		button:hover {
-			background-color: #0056b3; /* Darker blue when hovering over the button */
-		}
-		button:active {
-			background-color: #004085; /* Even darker blue when button is clicked */
-		}
-		.report {
-			margin-top: 20px;
-			padding: 15px;
-			background-color: #d4edda; /* Light green background for report */
-			border: 1px solid #c3e6cb; /* Border color for report */
-			display: none;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			border-radius: 8px;
-		}
-		.report-container {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-		}
-		.report-column {
-			width: 48%;
-		}
-		.report hr {
-			border: 0;
-			height: 1px;
-			background: #ccc;
-			margin: 10px 0;
-		}
-		.notes {
-			margin-top: 20px;
-			padding: 15px;
-			background-color: #f8d7da; /* Light red background for notes */
-			border: 1px solid #f5c6cb; /* Border color for notes */
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			border-radius: 8px;
-		}
-		.notes h3 {
-			margin-top: 0;
-			color: #721c24; /* Dark red color for note headings */
-		}
-		canvas {
-			width: 100% !important;
-			max-width: 400px;
-			height: 800px !important;  /* Set a fixed height, adjust as needed */
-			display: block;
-			max-height: 900px;  /* Optional: Set a max height to prevent excessive growth */
-			object-fit: contain;  /* Keeps the aspect ratio intact */
-		}
-
-
-		/* Mobile responsiveness */
-		@media screen and (max-width: 768px) {
-			.container {
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				display: flex;
+				background-color: #f4f4f9;
+				margin: 0;
+				padding: 0;
+				justify-content: center;
+				align-items: center;
+				min-height: 100vh;
 				flex-direction: column;
+				box-sizing: border-box;
+				background-color: #e9ecef; /* Light background color for body */
 			}
-			.left-column, .right-column {
+
+			/* Header with logo and branding text */
+			header {
 				width: 100%;
-				margin-left: 0;
+				text-align: center;
+				margin-bottom: 30px; /* Space between logo and content */
 			}
-		}
-	</style>
 
+			.logo-container {
+				display: flex;
+				align-items: center; /* Aligns logo and text vertically */
+				justify-content: center; /* Centers logo and text horizontally */
+			}
 
+			.logo {
+				width: 150px;  /* Adjust width as needed */
+				height: auto;
+				margin-right: 10px; /* Space between logo and text */
+			}
+
+			.branding-text {
+				font-size: 40px;
+				font-weight: 600;
+				color: #2985A5; /* Branding text color */
+				letter-spacing: 1px;
+			}
+			.container {
+				display: flex;
+				width: 90%;
+				max-width: 1200px;
+				padding: 20px;
+				background-color: #fff; /* White background for the container */
+				border-radius: 12px;
+			}
+			.left-column {
+				width: 30%;
+				padding: 20px;
+				background-color: #ffffff; /* Light white background for left column */
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				border-radius: 8px;
+				border: 1px solid #ddd; /* Border for left column */
+			}
+			.right-column {
+				width: 70%;
+				padding: 20px;
+				background-color: #f8f9fa; /* Slightly darker background for right column */
+				margin-left: 20px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				border-radius: 8px;
+				border: 1px solid #ddd; /* Border for right column */
+			}
+			h2 {
+				text-align: center;
+				font-size: 24px;
+				font-weight: 600;
+				color: #2985A5; /* Set heading color to theme color */
+			}
+			label {
+				font-weight: bold;
+				color: #2985A5; /* Set label color to theme color */
+			}
+			input {
+				width: 100%;
+				padding: 8px;
+				border: 1px solid #2985A5; /* Set input border color to theme color */
+				border-radius: 4px;
+				margin: 8px 0;
+				background-color: #ffffff;
+				font-size: 16px;
+			}
+			input:focus {
+				border-color: #80bdff; /* Focused input field color */
+				outline: none;
+			}
+			button {
+				background-color: #2985A5; /* Set button background color to theme color */
+				color: white;
+				border: none;
+				font-size: 16px;
+				cursor: pointer;
+				border-radius: 4px;
+				transition: background-color 0.3s, transform 0.2s;
+				padding: 10px;
+			}
+			button:hover {
+				background-color: #1f6f8b; /* Darker theme color for button hover */
+			}
+			button:active {
+				background-color: #1a5c77; /* Even darker theme color when button is clicked */
+			}
+			.report {
+				margin-top: 20px;
+				padding: 15px;
+				background-color: #d4edda; /* Light green background for report */
+				border: 1px solid #c3e6cb; /* Border color for report */
+				display: none;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+				border-radius: 8px;
+			}
+			.report-container {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+			}
+			.report-column {
+				width: 48%;
+			}
+			.report hr {
+				border: 0;
+				height: 1px;
+				background: #ccc;
+				margin: 10px 0;
+			}
+			.notes {
+				margin-top: 20px;
+				padding: 15px;
+				background-color: #cccc; /* Light red background for notes */
+				border: 1px solid #f5c6cb; /* Border color for notes */
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+				border-radius: 8px;
+			}
+			.notes h3 {
+				margin-top: 0;
+				color: #721c24; /* Dark red color for note headings */
+			}
+			canvas {
+				width: 100% !important;
+				max-width: 400px;
+				height: 800px !important;  /* Set a fixed height, adjust as needed */
+				display: block;
+				max-height: 900px;  /* Optional: Set a max height to prevent excessive growth */
+				object-fit: contain;  /* Keeps the aspect ratio intact */
+			}
+
+			/* Mobile responsiveness */
+			@media screen and (max-width: 768px) {
+				.container {
+					flex-direction: column;
+				}
+				.left-column, .right-column {
+					width: 100%;
+					margin-left: 0;
+				}
+			}
+		</style>
 </head>
 <body>
+    <header>
+        <!--<img src="C:\Users\09184G744\OneDrive - IBM\Desktop\logo.png" alt="Logo" class="logo">-->
+		<span class="branding-text">Car Expense Calculator</span>
+    </header>
     <div class="container">
         <!-- Left Column (Input Form) -->
         <div class="left-column">
@@ -336,16 +363,8 @@
                 datasets: [{
                     label: 'Expense To-Date',
                     data: [carCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)'
-                    ],
+                    backgroundColor: '#2985A5',
+                    borderColor: '#ccccc',
                     borderWidth: 1
                 }]
             };
@@ -375,16 +394,8 @@
                 datasets: [{
                     label: 'Expense Ownership Period',
                     data: [carCost, totalFuelCost, totalServiceMaintenance, otherMaintenance],
-                    backgroundColor: [
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
+                    backgroundColor: '#2985A5',
+                    borderColor: '#ccccc',
                     borderWidth: 1
                 }]
             };

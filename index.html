@@ -357,67 +357,81 @@
             document.getElementById("expenseReport").innerHTML = reportHTML;
             document.getElementById("expenseReport").style.display = 'block';
 
-            // Generate the Bar Chart for Maintenance Cost To-Date
-            const chartDataToDate = {
-                labels: ['Car Cost', 'Fuel Cost Paid', 'Service Maintenance Paid', 'Other Maintenance'],
-                datasets: [{
-                    label: 'Expense To-Date',
-                    data: [carCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance],
-                    backgroundColor: '#2985A5',
-                    borderColor: '#ccccc',
-                    borderWidth: 1
-                }]
-            };
-            const ctxToDate = document.getElementById('expenseChartToDate').getContext('2d');
-            new Chart(ctxToDate, {
-                type: 'bar',
-                data: chartDataToDate,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '' + value.toLocaleString();
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+            // Determine the maximum value across all datasets for consistent Y-axis scaling
+			const maxYValueT = Math.max(
+				...[carCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance,
+				   carCost, totalFuelCost, totalServiceMaintenance, otherMaintenance]
+			);
+			
+			// Round up maxYValue to the next greater value (e.g., nearest multiple of 10)
+			maxYValue = Math.ceil(maxYValueT / 1000000) * 1000000;
 
-            // Generate the Bar Chart for Maintenance Cost Ownership Period
-            const chartDataOwnership = {
-                labels: ['Car Cost', 'Fuel Cost Total', 'Service Maintenance Total', 'Other Maintenance'],
-                datasets: [{
-                    label: 'Expense Ownership Period',
-                    data: [carCost, totalFuelCost, totalServiceMaintenance, otherMaintenance],
-                    backgroundColor: '#2985A5',
-                    borderColor: '#ccccc',
-                    borderWidth: 1
-                }]
-            };
-            const ctxOwnership = document.getElementById('expenseChartOwnership').getContext('2d');
-            new Chart(ctxOwnership, {
-                type: 'bar',
-                data: chartDataOwnership,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '' + value.toLocaleString();
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+			// Generate the Bar Chart for Maintenance Cost To-Date
+			const chartDataToDate = {
+				labels: ['Car Cost', 'Fuel Cost Paid', 'Service Maintenance Paid', 'Other Maintenance'],
+				datasets: [{
+					label: 'Expense To-Date',
+					data: [carCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance],
+					backgroundColor: '#2985A5',
+					borderColor: '#ccccc',
+					borderWidth: 1
+				}]
+			};
+			const ctxToDate = document.getElementById('expenseChartToDate').getContext('2d');
+			new Chart(ctxToDate, {
+				type: 'bar',
+				data: chartDataToDate,
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						y: {
+							beginAtZero: true,
+							min: 0, // Start at zero
+							max: maxYValue, // Set the maximum value
+							ticks: {
+								callback: function(value) {
+									return '' + value.toLocaleString();
+								}
+							}
+						}
+					}
+				}
+			});
+
+			// Generate the Bar Chart for Maintenance Cost Ownership Period
+			const chartDataOwnership = {
+				labels: ['Car Cost', 'Fuel Cost Total', 'Service Maintenance Total', 'Other Maintenance'],
+				datasets: [{
+					label: 'Expense Ownership Period',
+					data: [carCost, totalFuelCost, totalServiceMaintenance, otherMaintenance],
+					backgroundColor: '#2985A5',
+					borderColor: '#ccccc',
+					borderWidth: 1
+				}]
+			};
+			const ctxOwnership = document.getElementById('expenseChartOwnership').getContext('2d');
+			new Chart(ctxOwnership, {
+				type: 'bar',
+				data: chartDataOwnership,
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						y: {
+							beginAtZero: true,
+							min: 0, // Start at zero
+							max: maxYValue, // Set the maximum value
+							ticks: {
+								callback: function(value) {
+									return '' + value.toLocaleString();
+								}
+							}
+						}
+					}
+				}
+			});
+
         }
 		
 		function loadLastSavedData() {

@@ -53,7 +53,7 @@
 			border-radius: 12px;
 		}
 		.left-column {
-			width: 30%;
+			width: 40%;
 			padding: 20px;
 			background-color: #ffffff; /* Light white background for left column */
 			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -121,6 +121,20 @@
 		}
 		button:active {
 			background-color: #1a5c77; /* Even darker theme color when button is clicked */
+		}
+		.profile-controls {
+		margin: 10px 0;
+		}
+		.profile-controls-row {
+			display: flex;
+			align-items: center;
+			gap: 10px; /* Adds spacing between elements */
+		}
+
+		.profile-controls-row button,
+		.profile-controls-row select {
+			padding: 5px 10px;
+			font-size: 14px;
 		}
 		.report {
 			margin-top: 20px;
@@ -193,52 +207,61 @@
         <div class="left-column">
             <h3>Vehicle Detail</h3>
             <label for="model">Model</label>
-            <input type="text" id="model" value="Vehicle Name">
+            <input type="text" id="model" oninput="generateReport()">
 
             <h3>Loan Details</h3>
             <label for="downPayment">Down Payment</label>
-            <input type="number" id="downPayment" step="0.01" value="5000.00">
+            <input type="number" id="downPayment" step="0.01" oninput="generateReport()">
 
             <label for="principal">Principal (Loan Amount)</label>
-            <input type="number" id="principal" step="0.01" value="100000.00">
+            <input type="number" id="principal" step="0.01" oninput="generateReport()">
 
             <label for="interestRate">Rate of Interest (%)</label>
-            <input type="number" id="interestRate" step="0.01" value="8.85">
+            <input type="number" id="interestRate" step="0.01" oninput="generateReport()">
 
             <label for="termMonths">Term (Months)</label>
-            <input type="number" id="termMonths" value="60">
+            <input type="number" id="termMonths" oninput="generateReport()">
 
             <label for="monthsPaid">Months Paid</label>
-            <input type="number" id="monthsPaid" value="48">
+            <input type="number" id="monthsPaid" oninput="generateReport()">
 
             <label for="emiPaidInAdvance">EMI Paid in Advance</label>
-            <input type="number" id="emiPaidInAdvance" step="0.01" value="4536.80">
+            <input type="number" id="emiPaidInAdvance" step="0.01" oninput="generateReport()">
 
             <h3>Maintenance Details</h3>
             <label for="distance">Distance Ran Per Year (km)</label>
-            <input type="number" id="distance" value="5000">
+            <input type="number" id="distance" oninput="generateReport()">
 
             <label for="mileage">Mileage (km/l)</label>
-            <input type="number" id="mileage" step="0.01" value="30">
+            <input type="number" id="mileage" step="0.01" oninput="generateReport()">
 
             <label for="fuelCost">Fuel Cost per Litre</label>
-            <input type="number" id="fuelCost" step="0.01" value="101.00">
+            <input type="number" id="fuelCost" step="0.01" oninput="generateReport()">
 
             <label for="serviceMaintenance">Service Maintenance (per Year)</label>
-            <input type="number" id="serviceMaintenance" step="0.01" value="1500.00">
+            <input type="number" id="serviceMaintenance" step="0.01" oninput="generateReport()">
 
             <label for="otherMaintenance">Other Maintenance & Repair</label>
-            <input type="number" id="otherMaintenance" step="0.01" value="10000.00">
+            <input type="number" id="otherMaintenance" step="0.01" oninput="generateReport()">
 
             <label for="ownershipPeriod">Ownership Period (Months) (Tentative)</label>
-            <input type="number" id="ownershipPeriod" value="120">
+            <input type="number" id="ownershipPeriod" oninput="generateReport()">
 
             <h3>Vehicle Resale Value</h3>
             <label for="resaleValue">Resale Value</label>
-            <input type="number" id="resaleValue" step="0.01" value="40000">
+            <input type="number" id="resaleValue" step="0.01" oninput="generateReport()">
 
-         	<button onclick="generateReport()">Generate Report</button>
 			<button onclick="loadLastSavedData()">Use Last Saved Data</button>
+			
+			<div class="profile-controls">
+				<h3>Manage Profiles</h3>
+				<select id="profileSelector" onchange="loadProfile()">
+					<option value="">Select a Profile</option>
+				</select>
+				<button onclick="saveProfile()">Save Profile</button>
+				<button onclick="deleteProfile()">Delete Profile</button>
+			</div>
+			
         </div>
 
         <!-- Right Column (Report Display) -->
@@ -255,23 +278,24 @@
                 <div class="report-column">
                     <canvas id="expenseChartOwnership"></canvas>
                 </div>
-            </div>
+			</div>
 
-            <!-- Notes Section -->
-            <div class="notes">
-                <h2>Notes</h2>
-                <textarea id="noteInput" placeholder="Type your note here..." style="width: calc(100% - 16px); height: 60px; font-size: 16px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
-                <button onclick="addNote()">Save Note</button>
-                <div class="notes-list" id="notesList"></div>
-            </div>
+			<!-- Notes Section -->
+			<div class="notes">
+				<h2>Notes</h2>
+				<textarea id="noteInput" placeholder="Type your note here..." style="width: calc(100% - 16px); height: 60px; font-size: 16px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
+				<button onclick="addNote()">Save Note</button>
+				<div class="notes-list" id="notesList"></div>
+			</div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script>
-	        function formatToTwoDecimals(value) {
-            return Math.round(value * 100) / 100;
+		// Roundoff Number to 2 decimals
+		function formatToTwoDecimals(value) {
+		return Math.round(value * 100) / 100;
         }
         function generateReport() {
             // Get inputs from user
@@ -384,128 +408,214 @@
 			// Add Chart.js DataLabels plugin
 			Chart.register(ChartDataLabels);
 
-			// Determine the maximum value across all datasets and round it to the next greater million
-			const maxYValue = Math.max(
-				...[vehicleCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance,
-				   vehicleCost, totalFuelCost, totalServiceMaintenance, otherMaintenance]
-			);
-			const maxYValueRounded = Math.ceil(maxYValue / 100000) * 100000;
+			let chartToDate = null;
+			let chartOwnership = null;
 
-			// Generate the Bar Chart for Maintenance Cost To-Date
-			const chartDataToDate = {
-				labels: ['Vehicle Cost', 'Fuel Cost Paid', 'Service Maintenance Paid', 'Other Maintenance'],
-				datasets: [{
-					label: 'Expense To-Date',
-					data: [vehicleCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance],
-					backgroundColor: '#2985A5',
-					borderColor: '#ccccc',
-					borderWidth: 1
-				}]
-			};
-			const ctxToDate = document.getElementById('expenseChartToDate').getContext('2d');
-			new Chart(ctxToDate, {
-				type: 'bar',
-				data: chartDataToDate,
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						datalabels: {
-							anchor: 'end',
-							align: 'end',
-							color: '#2985A5', // Text color
-							font: {
-								size: 12,
-								weight: 'bold'
-							},
-							formatter: function(value) {
-								return value.toLocaleString(); // Format value with commas
-							}
-						}
+			function createBarChart(ctx, labels, data, chartLabel, maxYValueRounded) {
+				return new Chart(ctx, {
+					type: 'bar',
+					data: {
+						labels: labels,
+						datasets: [{
+							label: chartLabel,
+							data: data,
+							backgroundColor: '#2985A5',
+							borderColor: '#ccccc',
+							borderWidth: 1,
+						}]
 					},
-					scales: {
-						y: {
-							beginAtZero: true,
-							min: 0,
-							max: maxYValueRounded,
-							ticks: {
-								callback: function(value) {
-									return '' + value.toLocaleString();
-								}
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							datalabels: {
+								anchor: 'end',
+								align: 'end',
+								color: '#2985A5',
+								font: { size: 12, weight: 'bold' },
+								formatter: (value) => value.toLocaleString()
+							}
+						},
+						scales: {
+							y: {
+								beginAtZero: true,
+								min: 0,
+								max: maxYValueRounded,
+								ticks: {
+									callback: (value) => value.toLocaleString(),
+								},
 							}
 						}
 					}
-				}
-			});
+				});
+			}
 
-			// Generate the Bar Chart for Maintenance Cost Ownership Period
-			const chartDataOwnership = {
-				labels: ['Vehicle Cost', 'Fuel Cost Total', 'Service Maintenance Total', 'Other Maintenance'],
-				datasets: [{
-					label: 'Expense Ownership Period',
-					data: [vehicleCost, totalFuelCost, totalServiceMaintenance, otherMaintenance],
-					backgroundColor: '#2985A5',
-					borderColor: '#ccccc',
-					borderWidth: 1
-				}]
-			};
-			const ctxOwnership = document.getElementById('expenseChartOwnership').getContext('2d');
-			new Chart(ctxOwnership, {
-				type: 'bar',
-				data: chartDataOwnership,
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						datalabels: {
-							anchor: 'end',
-							align: 'end',
-							color: '#2985A5', // Text color
-							font: {
-								size: 12,
-								weight: 'bold'
-							},
-							formatter: function(value) {
-								return value.toLocaleString(); // Format value with commas
-							}
-						}
-					},
-					scales: {
-						y: {
-							beginAtZero: true,
-							min: 0,
-							max: maxYValueRounded,
-							ticks: {
-								callback: function(value) {
-									return '' + value.toLocaleString();
-								}
-							}
-						}
-					}
-				}
-			});
-        }
+			function calculateMaxYValue(dataArray) {
+				// Finds the maximum value from the dataset and rounds up to the nearest multiple of 1000
+				const maxValue = Math.max(...dataArray);
+				return Math.ceil(maxValue / 100000) * 100000;
+			}
+
+			function generateCharts() {
+				const maxYValue = calculateMaxYValue([
+					vehicleCostToDate,
+					totalFuelCostPaid,
+					totalServiceMaintenancePaid,
+					otherMaintenance,
+					vehicleCost,
+					totalFuelCost,
+					totalServiceMaintenance,
+				]);
+
+				// Destroy existing charts if they exist
+				if (chartToDate) chartToDate.destroy();
+				if (chartOwnership) chartOwnership.destroy();
+
+				// Create the charts
+				const ctxToDate = document.getElementById('expenseChartToDate').getContext('2d');
+				chartToDate = createBarChart(
+					ctxToDate,
+					['Vehicle Cost', 'Fuel Cost Paid', 'Service Maintenance Paid', 'Other Maintenance'],
+					[vehicleCostToDate, totalFuelCostPaid, totalServiceMaintenancePaid, otherMaintenance],
+					'Expense To-Date',
+					maxYValue
+				);
+
+				const ctxOwnership = document.getElementById('expenseChartOwnership').getContext('2d');
+				chartOwnership = createBarChart(
+					ctxOwnership,
+					['Vehicle Cost', 'Fuel Cost Total', 'Service Maintenance Total', 'Other Maintenance'],
+					[vehicleCost, totalFuelCost, totalServiceMaintenance, otherMaintenance],
+					'Expense Ownership Period',
+					maxYValue
+				);
+			}
+
+			
+			// Ensure this is called at the end of generateReport
+			generateCharts();
 		
-		function loadLastSavedData() {
-            // Load saved data from localStorage
-            if (localStorage.getItem('model')) {
-                document.getElementById('model').value = localStorage.getItem('model');
-                document.getElementById('downPayment').value = localStorage.getItem('downPayment');
-                document.getElementById('principal').value = localStorage.getItem('principal');
-                document.getElementById('interestRate').value = localStorage.getItem('interestRate');
-                document.getElementById('termMonths').value = localStorage.getItem('termMonths');
-                document.getElementById('ownershipPeriod').value = localStorage.getItem('ownershipPeriod');
-                document.getElementById('distance').value = localStorage.getItem('distance');
-                document.getElementById('mileage').value = localStorage.getItem('mileage');
-                document.getElementById('fuelCost').value = localStorage.getItem('fuelCost');
-                document.getElementById('serviceMaintenance').value = localStorage.getItem('serviceMaintenance');
-                document.getElementById('otherMaintenance').value = localStorage.getItem('otherMaintenance');
-                document.getElementById('monthsPaid').value = localStorage.getItem('monthsPaid');
-		document.getElementById('resaleValue').value = localStorage.getItem('resaleValue');
-            } else {
-                alert('No saved data found!');
-            }
-        }
+
+		
+	}
+	
+					function saveProfile() {
+				const profile = {
+					model: document.getElementById("model").value,
+					downPayment: document.getElementById("downPayment").value,
+					principal: document.getElementById("principal").value,
+					interestRate: document.getElementById("interestRate").value,
+					termMonths: document.getElementById("termMonths").value,
+					emiPaidInAdvance: document.getElementById("emiPaidInAdvance").value,
+					ownershipPeriod: document.getElementById("ownershipPeriod").value,
+					distance: document.getElementById("distance").value,
+					mileage: document.getElementById("mileage").value,
+					fuelCost: document.getElementById("fuelCost").value,
+					serviceMaintenance: document.getElementById("serviceMaintenance").value,
+					otherMaintenance: document.getElementById("otherMaintenance").value,
+					monthsPaid: document.getElementById("monthsPaid").value,
+					resaleValue: document.getElementById("resaleValue").value
+				};
+
+				// Retrieve profiles from localStorage
+				const profiles = JSON.parse(localStorage.getItem("vehicleProfiles")) || [];
+				profiles.push(profile);
+
+				// Save updated profiles back to localStorage
+				localStorage.setItem("vehicleProfiles", JSON.stringify(profiles));
+				alert("Profile saved successfully!");
+
+				updateProfileSelector();
+			}
+
+			function loadProfile() {
+				const selectedIndex = document.getElementById("profileSelector").value;
+				if (!selectedIndex) {
+					alert("Please select a profile.");
+					return;
+				}
+
+				// Retrieve profiles from localStorage
+				const profiles = JSON.parse(localStorage.getItem("vehicleProfiles")) || [];
+				const profile = profiles[selectedIndex];
+
+				// Load profile data into the form
+				document.getElementById("model").value = profile.model;
+				document.getElementById("downPayment").value = profile.downPayment;
+				document.getElementById("principal").value = profile.principal;
+				document.getElementById("interestRate").value = profile.interestRate;
+				document.getElementById("termMonths").value = profile.termMonths;
+				document.getElementById("emiPaidInAdvance").value = profile.emiPaidInAdvance;
+				document.getElementById("ownershipPeriod").value = profile.ownershipPeriod;
+				document.getElementById("distance").value = profile.distance;
+				document.getElementById("mileage").value = profile.mileage;
+				document.getElementById("fuelCost").value = profile.fuelCost;
+				document.getElementById("serviceMaintenance").value = profile.serviceMaintenance;
+				document.getElementById("otherMaintenance").value = profile.otherMaintenance;
+				document.getElementById("monthsPaid").value = profile.monthsPaid;
+				document.getElementById("resaleValue").value = profile.resaleValue;
+
+				alert("Profile loaded successfully!");
+			}
+
+			function deleteProfile() {
+				const selectedIndex = document.getElementById("profileSelector").value;
+				if (!selectedIndex) {
+					alert("Please select a profile.");
+					return;
+				}
+
+				// Retrieve profiles from localStorage
+				const profiles = JSON.parse(localStorage.getItem("vehicleProfiles")) || [];
+				profiles.splice(selectedIndex, 1);
+
+				// Save updated profiles back to localStorage
+				localStorage.setItem("vehicleProfiles", JSON.stringify(profiles));
+				alert("Profile deleted successfully!");
+
+				updateProfileSelector();
+			}
+
+			function updateProfileSelector() {
+				const profiles = JSON.parse(localStorage.getItem("vehicleProfiles")) || [];
+				const profileSelector = document.getElementById("profileSelector");
+
+				// Clear existing options
+				profileSelector.innerHTML = '<option value="">Select a Profile</option>';
+
+				// Populate the selector with profile options
+				profiles.forEach((profile, index) => {
+					const option = document.createElement("option");
+					option.value = index;
+					option.textContent = profile.model || `Profile ${index + 1}`;
+					profileSelector.appendChild(option);
+				});
+			}
+
+			// Initialize the profile selector on page load
+			updateProfileSelector();
+			
+			function loadLastSavedData() {
+				// Load saved data from localStorage
+				if (localStorage.getItem('model')) {
+					document.getElementById('model').value = localStorage.getItem('model');
+					document.getElementById('downPayment').value = localStorage.getItem('downPayment');
+					document.getElementById('principal').value = localStorage.getItem('principal');
+					document.getElementById('interestRate').value = localStorage.getItem('interestRate');
+					document.getElementById('termMonths').value = localStorage.getItem('termMonths');
+					document.getElementById('ownershipPeriod').value = localStorage.getItem('ownershipPeriod');
+					document.getElementById('distance').value = localStorage.getItem('distance');
+					document.getElementById('mileage').value = localStorage.getItem('mileage');
+					document.getElementById('fuelCost').value = localStorage.getItem('fuelCost');
+					document.getElementById('serviceMaintenance').value = localStorage.getItem('serviceMaintenance');
+					document.getElementById('otherMaintenance').value = localStorage.getItem('otherMaintenance');
+					document.getElementById('monthsPaid').value = localStorage.getItem('monthsPaid');
+					document.getElementById('resaleValue').value = localStorage.getItem('resaleValue');
+				} else {
+					alert('No saved data found!');
+					}
+			}
+			
 
         function loadNotes() {
             const notes = JSON.parse(localStorage.getItem('notes')) || [];
